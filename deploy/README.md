@@ -12,6 +12,9 @@
   ```bash
   gh api repos/OWNER/REPO/pages -X POST -f build_type=legacy -f "source[branch]=main" -f "source[path]=/"
   ```
+- 仓库根目录必须有 **`.nojekyll`** 文件（本仓库已带）。它让 Pages 跳过 Jekyll、原样输出静态文件。
+
+> **千万不要删除 `.nojekyll`。** 没有它时 Pages 会用 Jekyll 处理整个仓库，而本仓库含中文文件名、二进制字体/图片与脚本，Jekyll 构建会卡死/失败，导致线上根路径 **404**（"must provide an index.html"）。这是实际踩过的坑。`deploy/publish_all.py` 做的是精确快照同步，只要本地保留 `.nojekyll`，它就会被一并同步、不会被误删。
 
 > 免费版 GitHub Pages 要求仓库**公开**。公开意味着内容在正式上线前就可被公网检索，请知悉后再决定。
 
