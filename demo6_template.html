@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>涉外刑事风险治理与合规中心 · 武汉大学涉外法治学院</title>
+<style>
+/* ============ embedded subset webfont: Source Han Serif SC (OFL, Adobe) ============ */
+@font-face{font-family:'SHS';font-style:normal;font-weight:400;font-display:swap;
+  src:url(data:font/woff2;base64,{{FONT_REG_B64}}) format('woff2');}
+@font-face{font-family:'SHS';font-style:normal;font-weight:600;font-display:swap;
+  src:url(data:font/woff2;base64,{{FONT_SB_B64}}) format('woff2');}
+/* ============ tokens ============ */
+:root{
+  --stage:#141C12; --stage-2:#18221A; --stage-3:#0F1610;
+  --paper:#F3EDE2; --paper-2:#FBF7EF;
+  --ink:#221D15; --ink-mut:#6E6558;
+  --pink:#F3EDE2; --pink-mut:rgba(243,237,226,.66);
+  --green:#7FA05A; --green-deep:#3E5B26; --green-soft:rgba(127,160,90,.16);
+  --brown:#A9714B; --brown-deep:#8A5A3B; --brown-soft:rgba(169,113,75,.14);
+  --line-d:rgba(243,237,226,.14); --line-p:rgba(34,29,21,.14);
+  --serif:'SHS',Georgia,"Songti SC","STSong","Noto Serif SC",serif;
+  --sans:'SHS',Georgia,"Songti SC","STSong","Noto Serif SC",serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 10px 30px rgba(20,28,18,.08);
+  --gut:72px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--stage);color:var(--pink);-webkit-font-smoothing:antialiased}
+::selection{background:var(--green);color:var(--paper-2)}
+button{font-family:inherit;cursor:pointer}
+img{user-select:none}
+#page{position:relative}
+#spineSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+#spineSvg .root,#spineSvg .main{fill:none;stroke-linecap:round}
+#spineSvg .root{stroke:rgba(243,237,226,.34);stroke-width:1.6}
+#spineSvg .main{stroke:rgba(138,90,59,.55);stroke-width:1.6}
+#spineSvg .branch{fill:none;stroke:rgba(138,90,59,.4);stroke-width:1.2;stroke-dasharray:4 5;opacity:0;transition:opacity .9s ease}
+#spineSvg .branch.on{opacity:1}
+#spineSvg .node{fill:var(--paper);stroke:var(--brown-deep);stroke-width:1.4;opacity:0;transform:scale(.4);transform-origin:center;transform-box:fill-box;transition:opacity .5s ease,transform .5s cubic-bezier(.2,.9,.3,1.4)}
+#spineSvg .node.on{opacity:1;transform:scale(1)}
+#spineSvg .ndot{fill:var(--brown-deep);opacity:0;transition:opacity .5s}
+#spineSvg .ndot.on{opacity:1}
+main{position:relative;z-index:1}
+header,footer{position:relative;z-index:2}
+.wrap{max-width:1240px;margin:0 auto;padding:0 56px 0 106px}
+.kicker{font-size:13.5px;letter-spacing:.08em;color:var(--green)}
+.on-paper .kicker{color:var(--green-deep)}
+h1,h2,h3,.serif{font-family:var(--serif)}
+h2{font-size:clamp(24px,2.7vw,34px);line-height:1.3;margin:12px 0 10px;font-weight:600}
+.sub{font-size:15.5px;line-height:1.8;color:var(--pink-mut);max-width:52ch}
+.on-paper{background:var(--paper);color:var(--ink)}
+.on-paper .sub{color:var(--ink-mut)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease var(--d,0s),transform .8s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+
+/* ============ header: full-width quiet top bar ============
+   transparent over the hero; frosted ink on dark chapters;
+   frosted paper on light chapters (toggled by .on-paper) */
+header{position:fixed;top:0;left:0;right:0;z-index:60;width:100%;border-radius:0;border:0;border-bottom:1px solid rgba(34,29,21,.10);background:rgba(243,237,226,.66);backdrop-filter:blur(14px) saturate(1.05);-webkit-backdrop-filter:blur(14px) saturate(1.05);box-shadow:0 1px 0 rgba(34,29,21,.04);transition:background .5s ease,border-color .5s ease}
+header.scrolled{background:rgba(15,22,16,.72);border-bottom-color:rgba(243,237,226,.10);backdrop-filter:blur(16px) saturate(1.06);-webkit-backdrop-filter:blur(16px) saturate(1.06)}
+header.scrolled.on-paper{background:rgba(243,237,226,.84);border-bottom-color:rgba(34,29,21,.10)}
+/* while the page is moving, the frosted blur would re-raster its backdrop every
+   frame; go near-opaque during scroll and restore the frost at rest */
+header.scrolling{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(243,237,226,.93)}
+header.scrolling.scrolled{background:rgba(15,22,16,.90)}
+header.scrolling.scrolled.on-paper{background:rgba(243,237,226,.94)}
+.hd{display:flex;align-items:center;gap:14px;height:58px;padding:0 30px}
+#logoBtn{width:34px;height:34px;border:0;padding:0;border-radius:50%;overflow:hidden;background:var(--paper);box-shadow:0 1px 8px rgba(34,29,21,.14);cursor:pointer;line-height:0;transition:transform .25s ease}
+#logoBtn:hover{transform:scale(1.07)}
+#logoBtn:focus-visible{outline:2px solid var(--green-deep);outline-offset:3px}
+.hd img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.26)}
+.hd .nm{line-height:1.3;margin-right:auto}
+.hd .nm b{font-family:var(--serif);font-size:15px;font-weight:600;display:block;color:var(--ink);transition:color .5s}
+.hd .nm span{font-family:var(--serif);font-size:9.5px;letter-spacing:.14em;color:var(--ink-mut);text-transform:uppercase;transition:color .5s}
+nav{display:flex;gap:2px}
+nav a{position:relative;font-size:14px;font-weight:500;color:rgba(34,29,21,.8);text-decoration:none;padding:7px 12px;border-radius:8px;transition:color .2s,background .2s}
+nav a:hover{color:var(--ink);background:rgba(34,29,21,.07)}
+nav a.on{color:var(--ink)}
+nav a.on::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:1.5px;border-radius:1px;background:var(--green-deep)}
+.sbtn{display:flex;align-items:center;gap:8px;border:1px solid rgba(34,29,21,.16);background:transparent;color:rgba(34,29,21,.72);border-radius:999px;padding:6px 12px;font-size:12.5px;transition:all .2s}
+.sbtn:hover{color:var(--ink);border-color:rgba(34,29,21,.4);background:rgba(34,29,21,.05)}
+.sbtn kbd{font-family:var(--mono);font-size:10px;border:1px solid rgba(34,29,21,.22);border-radius:4px;padding:1px 5px;color:rgba(34,29,21,.55)}
+.lang{display:flex;border:1px solid rgba(34,29,21,.16);border-radius:999px;padding:3px;background:transparent}
+.lang button{font-size:12.5px;border:0;background:none;color:rgba(34,29,21,.66);padding:4px 11px;border-radius:999px;transition:all .2s}
+.lang button.on{background:var(--green-deep);color:#F3EDE2}
+/* scrolled over dark chapters: frosted ink + light type */
+header.scrolled:not(.on-paper) .nm b{color:var(--pink)}
+header.scrolled:not(.on-paper) .nm span{color:var(--pink-mut)}
+header.scrolled:not(.on-paper) nav a{color:var(--pink-mut)}
+header.scrolled:not(.on-paper) nav a:hover{color:var(--pink);background:rgba(243,237,226,.08)}
+header.scrolled:not(.on-paper) nav a.on{color:#EAF3DA}
+header.scrolled:not(.on-paper) nav a.on::after{background:var(--green)}
+header.scrolled:not(.on-paper) .sbtn{color:var(--pink-mut);border-color:rgba(243,237,226,.16);background:transparent}
+header.scrolled:not(.on-paper) .sbtn:hover{color:var(--pink);border-color:rgba(243,237,226,.3);background:rgba(243,237,226,.06)}
+header.scrolled:not(.on-paper) .sbtn kbd{color:var(--pink-mut);border-color:rgba(243,237,226,.2)}
+header.scrolled:not(.on-paper) .lang{border-color:rgba(243,237,226,.16);background:transparent}
+header.scrolled:not(.on-paper) .lang button{color:var(--pink-mut)}
+header.scrolled:not(.on-paper) .lang button.on{background:var(--green);color:#12200E}
+/* logo zoom lightbox */
+#logoZoom{position:fixed;inset:0;z-index:130;background:rgba(15,22,18,.74);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s}
+#logoZoom.on{opacity:1;visibility:visible}
+#logoZoom .lz-in{text-align:center;transform:scale(.9);transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+#logoZoom.on .lz-in{transform:none}
+.seal{border-radius:50%;overflow:hidden;background:var(--paper);position:relative}
+.seal img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(var(--zoom,1))}
+#logoZoom .lz-seal{width:min(66vmin,540px);height:min(66vmin,540px);margin:0 auto;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+#logoZoom .lz-t{font-family:var(--serif);color:var(--pink);font-size:clamp(20px,2.4vw,30px);margin-top:30px;letter-spacing:.04em}
+#logoZoom .lz-s{color:var(--pink-mut);font-size:clamp(11px,1.15vw,15px);letter-spacing:.18em;text-transform:uppercase;margin-top:10px}
+#logoZoom .lz-x{position:absolute;top:26px;right:30px;border:1px solid rgba(243,237,226,.3);background:none;color:var(--pink-mut);border-radius:999px;padding:7px 16px;font-size:12px;cursor:pointer;transition:all .2s}
+#logoZoom .lz-x:hover{color:var(--pink);border-color:rgba(243,237,226,.6)}
+/* ============ language gate ============ */
+#gate{position:fixed;inset:0;z-index:120;background:var(--paper);display:flex;align-items:center;justify-content:center;transition:background-color .7s ease,opacity .65s ease,visibility .65s}
+#gate.off{opacity:0;visibility:hidden;pointer-events:none}
+.gate-in{text-align:center;padding:24px;transform:translateY(-2vh)}
+.gate-seal{width:min(48vmin,340px);height:min(48vmin,340px);margin:0 auto 28px;box-shadow:0 22px 56px rgba(34,29,21,.18);transition:transform .95s cubic-bezier(.7,0,.25,1)}
+.gate-name{font-family:var(--serif);font-size:clamp(21px,2.7vw,34px);color:var(--ink);letter-spacing:.01em;line-height:1.25}
+.gate-name-en{font-family:var(--serif);font-size:clamp(10px,1.05vw,13px);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mut);margin-top:9px}
+.gq-zh{font-family:var(--serif);font-size:clamp(15px,1.5vw,19px);letter-spacing:.01em;color:var(--green-deep);font-weight:500;margin-top:22px}
+.gq-en{font-size:12px;color:var(--ink-mut);margin-top:5px;letter-spacing:.02em}
+.gpills{display:flex;gap:12px;justify-content:center;margin-top:22px}
+.gpills button{font-size:14px;border:1px solid var(--line-p);background:none;color:var(--ink);border-radius:999px;padding:11px 32px;transition:all .25s}
+.gpills button:hover{background:var(--green-deep);border-color:var(--green-deep);color:var(--paper)}
+#gate.gate-fly{background-color:transparent}
+#gate.gate-fly .gate-name,#gate.gate-fly .gate-name-en,#gate.gate-fly .gq-zh,#gate.gate-fly .gq-en,#gate.gate-fly .gpills{opacity:0;transform:translateY(10px);transition:opacity .32s ease,transform .32s ease;pointer-events:none}
+@media(max-width:900px){nav{display:none}.hd{height:auto;padding:9px 18px}.hd .nm span{display:none}.wrap{padding:0 22px 0 52px}:root{--gut:28px}header{top:0;width:100%}}
+
+/* ============ chapter hud ============ */
+@media(max-width:1299px){#hud{display:none}}
+/* ============ carousel controls ============ */
+.grp .gh .gp{font-family:var(--serif);font-size:12px;color:var(--ink-mut);display:inline-flex;gap:6px;align-items:baseline;margin-left:16px}
+.grp .gh .gp b{color:var(--ink);font-weight:600;border-bottom:1px solid var(--brown-deep);padding-bottom:2px}
+.grp .gh .gp s{text-decoration:none}
+.cbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-p);background:none;color:var(--ink);font-size:15px;display:inline-flex;align-items:center;justify-content:center;transition:all .25s;margin-left:8px;flex-shrink:0}
+.cbtn:hover{background:var(--green-deep);border-color:var(--green-deep);color:var(--paper)}
+.cbtn[disabled]{opacity:.32;pointer-events:none}
+.grp.nocar .gp,.grp.nocar .cbtn{display:none}
+/* ============ editorial display type ============ */
+h1,h2,h3,.serif{letter-spacing:-.015em}
+h2{font-weight:500}
+.dir h3,.grp .gh h3,.sup h3{font-weight:500}
+
+/* ============ hero: misty sky depth stack ============ */
+#home{position:relative;overflow:visible;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:118px 0 0;
+  background:linear-gradient(to bottom,#EFF3F0 0%,#E9EFEA 38%,#E0E8E1 60%,#C2D0C4 80%,#69796A 91%,var(--stage) 100%)}
+/* film grain over everything for a lived-in, non-flat surface.
+   plain alpha (no mix-blend-mode): a full-viewport blend layer forces a whole-screen
+   recomposite every frame and was the main source of frame spikes */
+body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E")}
+#home::before{content:"";position:absolute;top:0;left:0;right:0;height:132px;z-index:3;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(239,243,240,.94),rgba(239,243,240,.62) 52%,rgba(239,243,240,0))}
+#skyFx{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(46% 34% at 68% 38%,rgba(255,255,255,.8),rgba(255,255,255,0) 70%),
+    radial-gradient(62% 15% at 52% 64%,rgba(255,255,255,.55),rgba(255,255,255,0) 72%),
+    radial-gradient(74% 17% at 28% 78%,rgba(228,238,231,.6),rgba(228,238,231,0) 74%);
+  animation:fogdrift 26s ease-in-out infinite alternate}
+@keyframes fogdrift{from{transform:translate3d(-1.4%,0,0) scale(1.02)}to{transform:translate3d(1.4%,-1.2%,0) scale(1.05)}}
+#globeCv{position:absolute;left:0;top:6%;width:50%;height:86%;--gA:.8;pointer-events:none;z-index:1}
+#birdCv{position:absolute;inset:0;pointer-events:none;z-index:1}
+.fogband{position:absolute;left:-20%;width:140%;height:15vh;z-index:1;pointer-events:none;filter:blur(10px);
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.34),transparent);
+  animation:banddrift 34s ease-in-out infinite alternate}
+@keyframes banddrift{from{transform:translateX(-5%)}to{transform:translateX(5%)}}
+#fb1{top:40%}
+#fb2{top:64%;animation-duration:46s;animation-direction:reverse;opacity:.7}
+#rays{position:absolute;inset:-12%;z-index:1;pointer-events:none;mix-blend-mode:soft-light;opacity:.45;
+  background:repeating-linear-gradient(115deg,rgba(255,255,255,0) 0 8%,rgba(255,255,255,.55) 10% 12%,rgba(255,255,255,0) 15% 27%);
+  -webkit-mask-image:radial-gradient(80% 70% at 80% 6%,#000,transparent 72%);
+  mask-image:radial-gradient(80% 70% at 80% 6%,#000,transparent 72%);
+  animation:raysway 18s ease-in-out infinite alternate}
+@keyframes raysway{from{transform:rotate(-1.6deg)}to{transform:rotate(1.6deg)}}
+@keyframes islebob{from{transform:translateY(-6px)}to{transform:translateY(7px)}}
+#partCv{position:absolute;inset:0;pointer-events:none;z-index:3}
+#treeWrap{position:absolute;left:auto;right:0.5vw;top:0;bottom:0;margin:auto 0;width:min(56vw,84vh);aspect-ratio:1280/1571;z-index:2;pointer-events:none;will-change:transform}
+#treeWrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;
+  filter:saturate(1.12) contrast(1.03)}
+#isleClip{position:absolute;inset:0;animation:islebob 9s ease-in-out infinite alternate;will-change:transform;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 3.5%);
+  mask-image:linear-gradient(to right,transparent 0,#000 3.5%)}
+#islandCanopy{transform-origin:50% 26%;will-change:transform;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0 20%,transparent 33%);
+  mask-image:linear-gradient(to bottom,#000 0 20%,transparent 33%)}
+#islandMid{transform-origin:50% 44%;will-change:transform;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0 21%,#000 33% 40%,transparent 52%);
+  mask-image:linear-gradient(to bottom,transparent 0 21%,#000 33% 40%,transparent 52%)}
+#islandBase{
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0 40%,#000 52% 100%);
+  mask-image:linear-gradient(to bottom,transparent 0 40%,#000 52% 100%)}
+#rootCv{position:absolute;inset:0;z-index:3;pointer-events:none;will-change:transform}
+#isleMist{position:absolute;right:0;bottom:2vh;width:50vw;height:62vh;z-index:1;pointer-events:none;filter:blur(6px);
+  background:radial-gradient(60% 55% at 62% 72%,rgba(233,239,234,.85),rgba(233,239,234,0) 70%),
+             radial-gradient(42% 30% at 84% 40%,rgba(255,255,255,.5),transparent 70%);
+  animation:fogdrift 22s ease-in-out infinite alternate}
+#homeFade{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(20,28,18,0) 64%,rgba(20,28,18,.22) 80%,rgba(20,28,18,.78) 93%,var(--stage) 100%)}
+#fgBranch{display:none;position:absolute;left:-9%;top:-14%;width:54vw;min-width:520px;z-index:5;pointer-events:none;
+  mix-blend-mode:multiply;filter:blur(5px) saturate(.92) brightness(1.03);opacity:.95;will-change:transform;
+  -webkit-mask-image:radial-gradient(120% 120% at 0% 0%,#000 34%,rgba(0,0,0,.55) 56%,transparent 74%),linear-gradient(to bottom,#000 82%,transparent 99%);
+  -webkit-mask-composite:source-in;
+  mask-image:radial-gradient(120% 120% at 0% 0%,#000 34%,rgba(0,0,0,.55) 56%,transparent 74%),linear-gradient(to bottom,#000 82%,transparent 99%);
+  mask-composite:intersect}
+#fgRootCv{display:none;position:absolute;left:0;top:0;width:46vw;height:52vh;z-index:5;pointer-events:none}
+.hero-grid{display:block;width:100%;max-width:1240px;margin:0 auto;padding:0 48px;position:relative;z-index:4}
+.hero-txt{position:relative;width:100%;max-width:640px;margin:0;padding:0;color:var(--ink);text-align:left}
+.pocket{position:relative;margin:0;padding:0}
+.hero-txt h1{font-size:clamp(34px,4.8vw,58px);line-height:1.16;margin:14px 0 22px;color:var(--ink);text-wrap:balance}
+.hero-txt .lead{font-size:16.5px;line-height:1.9;color:rgba(34,29,21,.74);max-width:520px;margin:0}
+.hero-txt .kicker{display:flex;align-items:center;justify-content:flex-start;color:var(--green-deep)}
+html[lang="zh-CN"] .hero-txt .kicker{font-size:clamp(14px,1.3vw,20px);letter-spacing:.2em;font-weight:600}
+html[lang="en"] .hero-txt .kicker{font-size:clamp(10px,.8vw,12.5px);letter-spacing:.1em;font-weight:600;white-space:nowrap}
+/* line-mask title reveal */
+.lm{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+.lm>i{display:block;font-style:normal;transform:translateY(112%);transition:transform .95s cubic-bezier(.2,.75,.15,1) var(--d,0s)}
+#heroTitle.on .lm>i,.rv.in .lm>i{transform:none}
+/* chapter transition veil */
+#veil{position:fixed;inset:0;z-index:55;pointer-events:none;opacity:0;transition:opacity .3s ease}
+/* section header parallax wrapper */
+.shd{will-change:transform}
+@media(max-width:900px){
+  #home{flex-direction:column;align-items:stretch;justify-content:flex-start;min-height:auto;padding-top:78px}
+  .wrap.hero-grid{order:1;width:100%}
+  #treeWrap{order:2;position:relative;inset:auto;right:auto;top:auto;transform:none!important;width:92%;max-width:none;margin:-6px auto 10px;aspect-ratio:1280/1571}
+  #fgBranch,#fgRootCv,#birdCv,#rays{display:none}
+  #skyFx,#isleMist,.fogband,#isleClip{animation:none}
+  #globeCv{--gA:.26;left:-6%;top:2%;width:110%;height:56%}
+  .hero-txt{padding:30px 0 8px;max-width:none;margin:0 auto;text-align:center}
+  .hero-txt .kicker{justify-content:center}
+  html[lang="en"] .hero-txt .kicker{white-space:normal;letter-spacing:.14em}
+  .hero-txt .lead{margin:0 auto}
+}
+
+/* ============ directions ============ */
+#about{position:relative;background:linear-gradient(var(--stage),var(--stage-3) 46%,var(--stage));padding:96px 0 120px}
+/* the 72px grid lines live on their own compositor layer: the scroll parallax
+   translates #abGrid instead of writing backgroundPosition, so scrolling no
+   longer repaints the whole full-height section every frame */
+#abGrid{position:absolute;left:0;right:0;top:0;bottom:0;z-index:0;pointer-events:none;overflow:hidden}
+#abGrid::before{content:"";position:absolute;left:0;right:0;top:-140px;bottom:-140px;will-change:transform;
+  transform:translate3d(0,var(--gy,0px),0);background:
+    linear-gradient(rgba(243,237,226,.045) 1px,transparent 1px) 0 0/72px 72px,
+    linear-gradient(90deg,rgba(243,237,226,.045) 1px,transparent 1px) 0 0/72px 72px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0 140px,#000 460px);
+  mask-image:linear-gradient(to bottom,transparent 0 140px,#000 460px)}
+#about>.wrap{position:relative;z-index:1}
+.dirs{display:grid;grid-template-columns:1.18fr 1fr 1fr;gap:20px;margin-top:52px;align-items:start}
+.dir:nth-child(2){margin-top:30px}
+.dir:nth-child(3){margin-top:60px}
+.dir{position:relative;background:rgba(243,237,226,.035);border:1px solid var(--line-d);border-radius:18px;padding:30px 28px 34px;transition:border-color .3s,transform .3s,background .3s}
+.dir:hover{border-color:rgba(127,160,90,.5);background:rgba(243,237,226,.06);transform:translateY(-4px)}
+.dir h3{font-size:21px;margin:14px 0 12px;color:var(--pink);font-weight:600}
+.dir p{font-size:14px;line-height:1.9;color:var(--pink-mut)}
+.dir .kw{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.dir .kw i{font-style:normal;font-size:11px;letter-spacing:.02em;color:#CFE3B4;border:1px solid rgba(127,160,90,.4);border-radius:999px;padding:3px 10px}
+@media(max-width:900px){.dirs{grid-template-columns:1fr}.dir:nth-child(2),.dir:nth-child(3){margin-top:0}}
+
+/* divider dark -> paper */
+.flare{display:block;width:100%;height:96px;background:var(--stage)}
+.flare svg{display:block;width:100%;height:100%}
+
+/* ============ members ============ */
+#members{padding:88px 0 96px}
+.sup{display:grid;grid-template-columns:250px 1fr;gap:44px;background:linear-gradient(135deg,var(--stage-2),var(--stage-3));border-radius:18px;padding:44px 48px;margin-top:52px;color:var(--pink);border:1px solid var(--line-d);cursor:pointer;transition:transform .3s,box-shadow .3s}
+.sup:hover{transform:translateY(-3px);box-shadow:0 24px 50px rgba(15,22,16,.35)}
+.sup .ava{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#8FB268,var(--green-deep) 72%);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:64px;color:#F6F2E7;box-shadow:inset 0 -14px 30px rgba(0,0,0,.28)}
+.sup h3{font-size:30px;font-weight:600}
+.sup .role{font-size:12px;letter-spacing:.08em;color:#CFE3B4;margin:8px 0 16px}
+.sup p{font-size:14.5px;line-height:1.9;color:var(--pink-mut);max-width:56ch}
+.sup .tags{display:flex;gap:8px;margin:18px 0 6px;flex-wrap:wrap}
+.sup .tags i{font-style:normal;font-size:12px;color:#CFE3B4;background:var(--green-soft);border-radius:999px;padding:4px 12px}
+.sup .hon{font-size:11.5px;color:var(--pink-mut);margin-top:14px;line-height:1.9}
+.sup .more{font-size:12px;letter-spacing:.04em;color:var(--green);margin-top:16px}
+.grp{margin-top:64px}
+.grp .gh{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.grp .gh h3{font-size:23px;font-weight:600}
+.grp .gh .c{font-family:var(--serif);font-size:12.5px;color:var(--brown-deep)}
+.grp .gh .rule{flex:1;height:1px;background:var(--line-p)}
+.car{position:relative}
+.track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 4px 22px;cursor:grab;scrollbar-width:none}
+.track::-webkit-scrollbar{display:none}
+.track.drag{cursor:grabbing;scroll-snap-type:none}
+.mcard{flex:0 0 232px;scroll-snap-align:start;background:var(--paper-2);border:1px solid var(--line-p);border-radius:14px;padding:24px 22px 22px;position:relative;transition:transform .3s,box-shadow .3s;cursor:pointer}
+.mcard:before{content:"";position:absolute;top:-16px;left:34px;width:1px;height:16px;background:rgba(138,90,59,.45)}
+.mcard:after{content:"";position:absolute;top:-19px;left:31.5px;width:6px;height:6px;border-radius:50%;background:var(--brown-deep)}
+.mcard:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.mcard .ava{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;color:#F6F2E7;margin-bottom:16px}
+.mcard .ava.g{background:radial-gradient(circle at 34% 30%,#8FB268,var(--green-deep) 74%)}
+.mcard .ava.b{background:radial-gradient(circle at 34% 30%,#C08552,var(--brown-deep) 74%)}
+.mcard b{font-family:var(--serif);font-size:17px;font-weight:600;display:block}
+.mcard .r{font-size:12.5px;color:var(--ink-mut);margin:4px 0 10px}
+.mcard .t{font-size:12.5px;color:var(--ink-mut);line-height:1.7}
+.mcard .yr{position:absolute;top:20px;right:18px;font-family:var(--serif);font-size:11px;color:var(--brown-deep);background:var(--brown-soft);border-radius:6px;padding:2px 8px}
+.bar{height:2px;background:var(--line-p);border-radius:2px;overflow:hidden;transition:opacity .3s}
+.bar i{display:block;height:100%;width:12%;background:var(--brown-deep);transition:width .2s}
+.yrow{display:grid;grid-template-columns:132px 1fr;gap:8px 26px;align-items:start;margin:20px 0}
+.yrow .yl{font-family:var(--serif);font-size:13px;letter-spacing:.06em;color:var(--brown-deep);padding-top:9px}
+.yrow .chips{display:flex;flex-wrap:wrap;gap:10px 12px}
+.mchip{display:inline-flex;align-items:baseline;gap:9px;border:1px solid var(--line-p);background:var(--paper-2);border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s}
+.mchip:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:rgba(138,90,59,.4)}
+.mchip b{font-family:var(--serif);font-size:15.5px;font-weight:600;color:var(--ink)}
+.mchip i{font-style:normal;font-size:11.5px;color:var(--ink-mut);letter-spacing:.02em}
+.grp .none{font-size:13.5px;color:var(--ink-mut);margin:6px 0 0}
+@media(max-width:900px){.sup{grid-template-columns:1fr;padding:32px 26px}.sup .ava{width:110px;height:110px;font-size:42px}}
+
+/* ============ pubs ============ */
+#pubs{padding:88px 0 96px;background:var(--paper-2);border-top:1px solid var(--line-p)}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:44px 0 18px}
+.tabs button{border:1px solid var(--line-p);background:none;border-radius:999px;padding:9px 20px;font-size:14px;color:var(--ink-mut);transition:all .25s}
+.tabs button:hover{color:var(--ink);border-color:rgba(34,29,21,.3)}
+.tabs button.on{background:var(--stage);color:var(--paper);border-color:var(--stage)}
+.ychips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:34px}
+.ychips button{border:0;background:none;font-family:var(--serif);font-size:12.5px;color:var(--ink-mut);padding:5px 10px;border-radius:8px;transition:all .2s}
+.ychips button:hover{color:var(--ink)}
+.ychips button.on{background:var(--green-soft);color:var(--green-deep)}
+.pub{display:flex;gap:26px;padding:24px 8px;border-top:1px solid var(--line-p);align-items:baseline;transition:background .25s}
+.pub:hover{background:rgba(127,160,90,.06)}
+.pub:last-child{border-bottom:1px solid var(--line-p)}
+.pub .no{font-family:var(--serif);font-size:12.5px;color:rgba(34,29,21,.3);flex:0 0 26px}
+.pub b{font-family:var(--serif);font-size:16.5px;font-weight:600;line-height:1.55;display:block;color:var(--ink)}
+.pub .meta{font-size:13px;color:var(--ink-mut);margin-top:5px}
+.pub .rchip{display:inline-block;font-size:11.5px;letter-spacing:.02em;color:var(--brown-deep);border:1px solid rgba(138,90,59,.35);border-radius:999px;padding:2px 10px;background:var(--brown-soft)}
+.pub .venue{margin-left:auto;font-size:11.5px;color:var(--green-deep);background:var(--green-soft);border-radius:6px;padding:3px 10px;white-space:nowrap;flex-shrink:0}
+@media(max-width:760px){.pub{flex-wrap:wrap}.pub .venue{margin-left:34px}}
+
+/* ============ news ============ */
+#news{padding:88px 0 110px}
+.tl{position:relative;margin-top:52px}
+.ncard{position:relative;background:var(--paper-2);border:1px solid var(--line-p);border-radius:14px;padding:26px 30px;box-shadow:var(--shadow);margin:0 0 26px 34px;transition:transform .3s,box-shadow .3s}
+.ncard:hover{transform:translateY(-3px)}
+.ncard .mh{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tag{font-size:11.5px;border-radius:999px;padding:4px 12px;letter-spacing:.04em}
+.ncard .dt{font-family:var(--serif);font-size:12.5px;color:var(--ink-mut)}
+.wxBadge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#0B7A4B;border:1px solid rgba(11,122,75,.35);border-radius:999px;padding:3px 10px;background:rgba(11,122,75,.07)}
+.nsrc{margin-left:auto;font-size:11px;color:var(--green-deep);background:var(--green-soft);border-radius:999px;padding:3px 10px;text-decoration:none;transition:background .25s}
+.nsrc:hover{background:rgba(127,160,90,.30)}
+.follow{margin:44px 0 0 34px;padding:28px 30px;text-align:center;border:1px solid rgba(62,91,38,.22);background:rgba(127,160,90,.07);border-radius:14px}
+.follow .fk{display:inline-block;font-size:11px;letter-spacing:.14em;color:var(--green-deep);background:var(--green-soft);border-radius:999px;padding:4px 14px}
+.follow .fn{display:block;margin-top:14px;font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.follow .fact{margin-top:18px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;min-height:38px}
+.follow .fbtn{font-family:var(--serif);font-size:13.5px;letter-spacing:.08em;color:var(--paper);background:var(--green-deep);border:0;border-radius:999px;padding:10px 28px;cursor:pointer;transition:background .18s ease,transform .18s ease}
+.follow .fbtn:hover{background:#34501f;transform:translateY(-1px)}
+.follow .fmsg{font-size:12px;color:var(--green-deep);opacity:0;transition:opacity .25s ease}
+.follow .fmsg.on{opacity:1}
+.wxBadge:before{content:"";width:6px;height:6px;border-radius:50%;background:#0B7A4B}
+.cnonly{font-size:11px;color:var(--ink-mut);border:1px dashed var(--line-p);border-radius:6px;padding:2px 8px}
+.ncard h3{font-size:19px;font-weight:600;margin:14px 0 10px;color:var(--ink)}
+.ncard .sum{font-size:14px;line-height:1.9;color:var(--ink-mut)}
+.ncard .body{display:none;font-size:14px;line-height:2;color:var(--ink-mut);margin-top:12px;border-top:1px dashed var(--line-p);padding-top:14px}
+.ncard.open .body{display:block}
+.ncard .more{font-size:11.5px;letter-spacing:.04em;color:var(--brown-deep);background:none;border:0;margin-top:14px;padding:0}
+.ncard.ext{cursor:pointer}
+.ncard.ext:hover{border-color:rgba(11,122,75,.4)}
+
+/* ============ footer ============ */
+footer{background:var(--stage-3);border-top:1px solid var(--line-d);padding:70px 0 40px;color:var(--pink-mut)}
+.ft{display:grid;grid-template-columns:1.4fr 1fr;gap:60px}
+.ft img{width:64px;height:64px;border-radius:50%;background:var(--paper);margin-bottom:20px}
+.ft b{font-family:var(--serif);font-size:19px;color:var(--pink);display:block;margin-bottom:12px}
+.ft p{font-size:13.5px;line-height:2}
+.ft .mail{font-family:var(--serif);font-size:13px;color:#CFE3B4}
+.ft h4{font-family:var(--serif);font-size:16px;color:var(--pink);margin-bottom:16px}
+.ft nav{display:flex;flex-direction:column;gap:10px}
+.ft nav a{color:var(--pink-mut);text-decoration:none;font-size:13.5px}
+.ft nav a:hover{color:var(--pink)}
+.ftbot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line-d);margin-top:52px;padding-top:26px;font-size:11.5px;letter-spacing:.02em}
+@media(max-width:900px){.ft{grid-template-columns:1fr}}
+
+/* ============ search overlay ============ */
+#sov{position:fixed;inset:0;z-index:90;background:rgba(11,17,11,.82);backdrop-filter:blur(10px);display:none;padding:11vh 20px 40px;overflow:auto}
+#sov.open{display:block}
+.spanel{max-width:660px;margin:0 auto;background:var(--stage-2);border:1px solid var(--line-d);border-radius:18px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.5)}
+.srow{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line-d)}
+.srow .ic{color:var(--green);font-size:17px}
+#sin{flex:1;background:none;border:0;outline:0;color:var(--pink);font-size:16px;font-family:var(--sans)}
+#sin::placeholder{color:rgba(243,237,226,.4)}
+.srow kbd{font-family:var(--mono);font-size:10px;color:var(--pink-mut);border:1px solid var(--line-d);border-radius:4px;padding:2px 6px}
+.schips{display:flex;gap:8px;flex-wrap:wrap;padding:14px 22px;border-bottom:1px solid var(--line-d)}
+.schips button{border:1px solid var(--line-d);background:none;color:var(--pink-mut);font-size:12px;border-radius:999px;padding:5px 13px;transition:all .2s}
+.schips button.on{background:var(--green-soft);color:#CFE3B4;border-color:rgba(127,160,90,.5)}
+#sres{max-height:46vh;overflow:auto;padding:8px}
+.sgrp{font-size:11px;letter-spacing:.1em;color:var(--pink-mut);padding:14px 14px 6px}
+.sitem{display:flex;gap:14px;align-items:baseline;padding:11px 14px;border-radius:10px;cursor:pointer}
+.sitem.act,.sitem:hover{background:rgba(243,237,226,.07)}
+.sitem .ty{font-size:10.5px;color:var(--green);flex:0 0 44px;letter-spacing:.04em}
+.sitem .ti{font-size:14px;color:var(--pink);line-height:1.6}
+.sitem .si{font-size:12px;color:var(--pink-mut);margin-top:2px}
+.sitem mark{background:none;color:#CFE3B4;font-weight:600}
+.sempty{padding:36px 20px;text-align:center;color:var(--pink-mut);font-size:13.5px}
+.sfoot{padding:12px 22px;border-top:1px solid var(--line-d);font-size:11px;color:var(--pink-mut);display:flex;gap:18px}
+
+/* ============ modal ============ */
+#mov{position:fixed;inset:0;z-index:95;background:rgba(11,17,11,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:24px}
+#mov.open{display:flex}
+.dlg{width:min(560px,100%);max-height:84vh;overflow:auto;background:var(--paper-2);color:var(--ink);border-radius:18px;padding:36px 38px;position:relative;box-shadow:0 40px 90px rgba(0,0,0,.45);animation:pop .35s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.dlg .x{position:absolute;top:16px;right:18px;border:0;background:none;font-size:20px;color:var(--ink-mut);line-height:1}
+.dlg .x:hover{color:var(--ink)}
+.dlg .top{display:flex;gap:20px;align-items:center}
+.dlg .ava{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:30px;color:#F6F2E7;flex-shrink:0}
+.dlg .ava.g{background:radial-gradient(circle at 34% 30%,#8FB268,var(--green-deep) 74%)}
+.dlg .ava.b{background:radial-gradient(circle at 34% 30%,#C08552,var(--brown-deep) 74%)}
+.ava.photo{background:none;font-size:0;overflow:hidden}
+.ava.photo img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block}
+.dlg h3{font-size:24px;font-weight:600}
+.dlg .role{font-size:11.5px;letter-spacing:.06em;color:var(--brown-deep);margin-top:6px}
+.dlg .sec{margin-top:24px}
+.dlg .sec h5{font-size:11px;letter-spacing:.1em;color:var(--green-deep);margin-bottom:10px}
+.dlg .sec p,.dlg .sec li{font-size:13.5px;line-height:1.95;color:var(--ink-mut)}
+.dlg .sec ul{list-style:none}
+.dlg .sec li:before{content:"—  ";color:var(--brown-deep)}
+.dlg .chips{display:flex;gap:8px;flex-wrap:wrap}
+.dlg .chips i{font-style:normal;font-size:12px;color:var(--green-deep);background:var(--green-soft);border-radius:999px;padding:4px 12px}
+.dlg .mail{font-family:var(--serif);font-size:13px;color:var(--brown-deep)}
+.flash{animation:flash 1.4s ease}
+@keyframes flash{0%,60%{background:rgba(127,160,90,.22)}100%{background:transparent}}
+
+/* ============ v5 layout system: vw type scale, full-height blocks, ghost numerals, marquees, word reveals ============ */
+h2{font-size:clamp(30px,4.3vw,58px);line-height:1.12;font-weight:600;margin:0 0 10px}
+html[lang="zh-CN"] h2{letter-spacing:.06em}
+html[lang="en"] h2{letter-spacing:.01em}
+.sec-lead{font-family:var(--serif);font-size:clamp(16px,1.65vw,22px);line-height:1.62;font-weight:500;color:var(--green);margin:0 0 12px;max-width:44em}
+.on-paper .sec-lead{color:var(--green-deep)}
+.sub{font-size:clamp(14px,1.15vw,17px);line-height:1.85;max-width:none}
+/* chapter epigraphs: the supervisor's maxims, set as serif pull-lines */
+.epi{margin:34px 0 20px;padding-left:26px;border-left:2px solid rgba(127,160,90,.55)}
+.epi b{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(17px,1.9vw,27px);line-height:1.6;letter-spacing:.015em;color:var(--pink)}
+.on-paper .epi{border-left-color:rgba(138,90,59,.5)}
+.on-paper .epi b{color:var(--ink)}
+#heroTitle{font-size:clamp(32px,4.1vw,60px);line-height:1.14;letter-spacing:-.005em}
+html[lang="en"] #heroTitle{font-size:clamp(24px,2.7vw,40px);line-height:1.18}
+html[lang="en"] .kicker{font-family:var(--serif);text-transform:uppercase;letter-spacing:.24em;font-size:clamp(10px,.84vw,13px);font-weight:500}
+html[lang="zh-CN"] .kicker{letter-spacing:.02em;font-size:clamp(12px,1vw,15px);font-weight:500}
+/* full-height blocks so each chapter owns the viewport */
+#about{min-height:100vh}
+#members,#pubs,#news{min-height:92vh}
+#about,#members,#pubs,#news{display:flex;flex-direction:column;justify-content:center}
+#about>.wrap,#members>.wrap,#pubs>.wrap,#news>.wrap{width:100%}
+/* oversized ghost index numeral fills the header's right void */
+.shd{position:relative}
+.shd>*{position:relative;z-index:1}
+/* per-word / per-char scroll reveal */
+.rv .w{display:inline-block;opacity:0;transform:translateY(.55em);filter:blur(7px);
+  transition:opacity .7s ease,transform .85s cubic-bezier(.2,.75,.15,1),filter .7s ease;
+  transition-delay:calc(var(--i)*40ms)}
+.rv.in .w{opacity:1;transform:none;filter:blur(0)}
+/* ============ v5 banyan motifs woven through the four chapters ============ */
+/* 01 research: aerial-root strands as column dividers */
+.dirs{position:relative}
+.dir+.dir::before{content:"";position:absolute;left:-11px;top:6%;bottom:6%;width:2px;border-radius:2px;
+  background:linear-gradient(to bottom,transparent,rgba(127,160,90,.42) 18%,rgba(127,160,90,.42) 82%,transparent)}
+.dir+.dir::after{content:"";position:absolute;left:-15px;top:36%;width:9px;height:9px;
+  border-radius:0 100% 0 100%;background:rgba(127,160,90,.5);transform:rotate(10deg)}
+/* 02 people: faint banyan-crown silhouette as card underlay */
+.mcard{background:var(--paper-2) url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20120%2084'%3E%3Cg%20fill='none'%20stroke='%23221d15'%20stroke-opacity='0.09'%20stroke-width='2'%3E%3Ccircle%20cx='34'%20cy='46'%20r='25'/%3E%3Ccircle%20cx='62'%20cy='32'%20r='29'/%3E%3Ccircle%20cx='90'%20cy='48'%20r='23'/%3E%3Cpath%20d='M62%2061v16'/%3E%3C/g%3E%3C/svg%3E") no-repeat right -14px bottom -10px/132px}
+.sup{background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20120%2084'%3E%3Cg%20fill='none'%20stroke='%23F3EDE2'%20stroke-opacity='0.10'%20stroke-width='2'%3E%3Ccircle%20cx='34'%20cy='46'%20r='25'/%3E%3Ccircle%20cx='62'%20cy='32'%20r='29'/%3E%3Ccircle%20cx='90'%20cy='48'%20r='23'/%3E%3Cpath%20d='M62%2061v16'/%3E%3C/g%3E%3C/svg%3E") no-repeat right 26px bottom 18px/210px,linear-gradient(135deg,var(--stage-2),var(--stage-3))}
+/* 03 achievements: trunk rail with growth-ring nodes */
+#pubList{position:relative;padding-left:34px}
+#pubList::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;
+  background:linear-gradient(to bottom,transparent,rgba(138,90,59,.35),transparent)}
+.pub{position:relative}
+.pub::before{content:"";position:absolute;left:-31px;top:32px;width:10px;height:10px;border-radius:50%;
+  border:2px solid rgba(138,90,59,.55);background:var(--paper-2);
+  box-shadow:0 0 0 3px var(--paper-2),0 0 0 4px rgba(138,90,59,.22)}
+/* 04 news: vine rail with falling-leaf bullets */
+.tl::before{content:"";position:absolute;left:10px;top:8px;bottom:8px;width:2px;
+  background:linear-gradient(to bottom,transparent,rgba(127,160,90,.42),transparent)}
+.ncard::before{content:"";position:absolute;left:-29px;top:30px;width:12px;height:12px;
+  background:var(--green-deep);border-radius:0 100% 0 100%;transform:rotate(-10deg);opacity:.85}
+@media(max-width:900px){
+  .dir+.dir::before,.dir+.dir::after{display:none}
+  #pubList{padding-left:26px}
+  .pub::before{left:-23px}
+  .ncard::before{left:-21px}
+}
+@media(max-width:900px){
+  h2{font-size:clamp(26px,8vw,42px)}
+  .sec-lead{font-size:clamp(15px,4.2vw,19px)}
+  #heroTitle{font-size:clamp(28px,8.4vw,44px)}
+  .shd::before{display:none}
+  #about,#members,#pubs,#news{min-height:0}
+}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}
+  .hero-grid{opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="gate-in">
+    <div class="seal gate-seal"><img id="logoGate" alt="logo"></div>
+    <div class="gate-name">涉外刑事风险治理与合规中心</div>
+    <div class="gate-name-en">Center for Foreign-Related Criminal Risk Governance and Compliance</div>
+    <p class="gq-zh">请选择阅读语言</p>
+    <p class="gq-en">Choose your language</p>
+    <div class="gpills">
+      <button data-glang="zh">中文</button>
+      <button data-glang="en">English</button>
+    </div>
+  </div>
+</div>
+<div id="page">
+<svg id="spineSvg" aria-hidden="true"></svg>
+<div id="veil"></div>
+
+<header>
+  <div class="hd">
+    <button id="logoBtn" aria-label="logo"><img id="logoSm" alt="logo"></button>
+    <div class="nm"><b id="hdName"></b><span id="hdNameEn"></span></div>
+    <nav id="nav"></nav>
+    <button class="sbtn" id="sOpen" aria-label="search"><span>⌕</span><span id="sLabel">搜索</span><kbd>⌘K</kbd></button>
+    <div class="lang" role="group" aria-label="language">
+      <button data-lang="zh" class="on">中</button><button data-lang="en">EN</button>
+    </div>
+  </div>
+</header>
+<div id="logoZoom" role="dialog" aria-modal="true" aria-label="logo">
+  <button class="lz-x" id="lzClose">ESC</button>
+  <div class="lz-in">
+    <div class="seal lz-seal"><img id="logoBig" alt="logo"></div>
+    <div class="lz-t" id="lzT"></div>
+    <div class="lz-s" id="lzS"></div>
+  </div>
+</div>
+
+<main>
+<section id="home">
+  <div id="skyFx"></div>
+  <canvas id="globeCv"></canvas>
+  <canvas id="birdCv"></canvas>
+  <div id="rays"></div>
+  <div class="fogband" id="fb1"></div>
+  <div class="fogband" id="fb2"></div>
+  <div id="treeWrap" aria-hidden="true">
+    <div id="isleClip">
+      <img id="islandBase" alt="">
+      <img id="islandMid" alt="">
+      <img id="islandCanopy" alt="">
+    </div>
+    <canvas id="rootCv"></canvas>
+  </div>
+  <div id="isleMist"></div>
+  <div id="homeFade"></div>
+  <canvas id="partCv"></canvas>
+  <div class="wrap hero-grid">
+    <div class="hero-txt">
+      <div class="pocket">
+        <div class="kicker rv" id="heroKicker"></div>
+        <h1 id="heroTitle"></h1>
+        <p class="lead rv" style="--d:.3s" id="heroLead"></p>
+      </div>
+    </div>
+  </div>
+  <img id="fgBranch" alt="" aria-hidden="true">
+  <canvas id="fgRootCv"></canvas>
+</section>
+
+<section id="about">
+  <i id="abGrid" aria-hidden="true"></i>
+  <div class="wrap">
+    <div class="shd">
+      <h2 class="rv" id="aboutName"></h2>
+      <p class="sec-lead rv" style="--d:.06s" id="aboutLead"></p>
+      <p class="sub rv" style="--d:.12s" id="aboutSub"></p>
+    </div>
+    <div class="dirs" id="dirs"></div>
+  </div>
+</section>
+
+<div class="flare" aria-hidden="true"><svg viewBox="0 0 1440 96" preserveAspectRatio="none"><path d="M0,96 L0,64 C240,88 420,20 720,44 C1020,68 1200,10 1440,52 L1440,96 Z" fill="#F3EDE2"/></svg></div>
+
+<section id="members" class="on-paper">
+  <div class="wrap">
+    <div class="shd">
+      <h2 class="rv" id="memName"></h2>
+      <p class="sec-lead rv" style="--d:.06s" id="memLead"></p>
+      <p class="sub rv" style="--d:.12s" id="memSub"></p>
+    </div>
+    <div class="sup rv" style="--d:.16s" id="supCard"></div>
+    <div id="groups"></div>
+  </div>
+</section>
+
+<section id="pubs" class="on-paper">
+  <div class="wrap">
+    <div class="shd">
+      <h2 class="rv" id="pubName"></h2>
+      <p class="sec-lead rv" style="--d:.06s" id="pubLead"></p>
+    </div>
+    <div class="epi rv" style="--d:.1s" id="epi2"></div>
+    <div class="tabs rv" style="--d:.1s" id="tabs"></div>
+    <div class="ychips rv" style="--d:.14s" id="ychips"></div>
+    <div id="pubList"></div>
+  </div>
+</section>
+
+<section id="news" class="on-paper">
+  <div class="wrap">
+    <div class="shd">
+      <h2 class="rv" id="newsName"></h2>
+      <p class="sec-lead rv" style="--d:.06s" id="newsLead"></p>
+    </div>
+    <div class="tl" id="newsList"></div>
+    <div class="follow rv" style="--d:.12s">
+      <span class="fk" id="fKicker"></span>
+      <b class="fn" id="fName"></b>
+      <div class="fact"><button class="fbtn" id="fBtn" type="button"></button><span class="fmsg" id="fMsg" role="status"></span></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="ft">
+      <div>
+        <img id="logoFt" alt="logo">
+        <b id="ftName"></b>
+        <p id="ftAddr"></p>
+        <p class="mail" id="ftMail"></p>
+      </div>
+      <div>
+        <h4 id="ftNav"></h4>
+        <nav id="ftLinks"></nav>
+      </div>
+    </div>
+    <div class="ftbot"><span>© 2026</span></div>
+  </div>
+</footer>
+</div>
+
+<div id="sov" role="dialog" aria-modal="true" aria-label="search">
+  <div class="spanel">
+    <div class="srow"><span class="ic">⌕</span><input id="sin" autocomplete="off"><kbd>ESC</kbd></div>
+    <div class="schips" id="schips"></div>
+    <div id="sres"></div>
+    <div class="sfoot"><span>↑↓ 选择</span><span>⏎ 打开</span><span>ESC 关闭</span></div>
+  </div>
+</div>
+
+<div id="mov" role="dialog" aria-modal="true">
+  <div class="dlg" id="dlg">
+    <button class="x" id="mClose" aria-label="close">×</button>
+    <div id="mBody"></div>
+  </div>
+</div>
+
+<script>
+const LOGO_B64 = "{{LOGO_B64}}";
+const ISLAND_B64 = "{{ISLAND_B64}}";
+const BRANCH_B64 = "{{BRANCH_B64}}";
+const LAND_B64 = "{{LAND_B64}}";
+
+/* ---------- i18n ---------- */
+const UI = {
+ zh:{nav:["首页","研究方向","成员","成果","新闻"],hd:"涉外刑事风险治理与合规中心",hdSub:"Center for Foreign-Related Criminal Risk Governance and Compliance",
+  heroKicker:"武汉大学涉外法治学院",heroTitle:"涉外刑事风险治理<br>与合规中心",
+  heroLead:"聚焦网络犯罪与涉外刑事治理中的刑法问题，做回应真实世界的研究。",
+  aboutKicker:"研究方向",aboutTitle:"让刑法回应时代",
+  aboutSub:"在信息网络时代，刑法需要解决“法益侵害社会化”和“刑事归责个别化”的冲突。",
+  epi2:"目光在技术与规范、理论与实践、实体与程序、国内和涉外之间来回往返",
+  memKicker:"中心成员",memTitle:"独木成林，气根落地又成新干",memSub:"点击卡片可查看个人详细介绍",
+  sup:"副教授 · 博士生导师",more:"点击查看完整档案 ↓",phd:"博士生",ms:"在校硕士生",alumni:"毕业校友",
+  phdNone:"暂无毕业与在读博士生。",
+  pubKicker:"研究成果",pubTitle:"写在纸上的，和做在地上的",
+  tabs:["论文","项目课题","学术论坛","出版专著"],all:"全部",
+  newsKicker:"新闻动态",newsTitle:"组里正在发生的事",
+  wx:"微信公众号",moreN:"展开全文",less:"收起",cnonly:"仅中文",
+  src:"原文链接",followKicker:"欢迎关注中心公众号",followName:"珞珈涉外犯罪治理研究",
+  followOpen:"进入公众号主页",followCopy:"复制公众号名称",followCopied:"已复制公众号名称，去微信「搜一搜」粘贴即可关注",
+  search:"搜索",sPh:"搜索成员、论文、课题、新闻…",
+  gM:"成员",gP:"论文",gJ:"项目",gF:"论坛",gB:"专著",gN:"新闻",
+  sEmpty:"没有匹配结果。试试「网络」「合规」或成员姓名。",
+  mBio:"简介",mDir:"研究方向",mTopic:"研究议题",mHon:"荣誉",mContact:"联系方式",mPub:"代表性成果",
+  ftAddr:"武汉大学法学院大楼 · 湖北武汉",ftMail:"crcgc@whu.edu.cn（占位）",ftNav:"站内导航"},
+ en:{nav:["Home","Research","People","Achievements","News"],hd:"CRCGC · Wuhan University",hdSub:"Wuhan University · School of Foreign-Related Rule of Law",
+  heroKicker:"Wuhan University · School of Foreign-Related Rule of Law",heroTitle:"Center for Foreign-Related<br>Criminal Risk Governance<br>and Compliance",
+  heroLead:"Criminal-law research on cybercrime and foreign-related criminal governance — grounded in the real world.",
+  aboutKicker:"Research",aboutTitle:"Criminal law answering its time",
+  aboutSub:"In the information-network era, criminal law must reconcile the socialization of harm to legal interests with the individualization of criminal imputation.",
+  epi2:"Let the gaze travel back and forth between technology and norms, theory and practice, substance and procedure, the domestic and the foreign-related",
+  memKicker:"Center Members",memTitle:"One tree, a grove — every aerial root that lands becomes a new trunk",memSub:"Click a card for each member's full profile.",
+  sup:"Associate Professor · Doctoral Supervisor",more:"Full profile ↓",phd:"PhD Students",ms:"Current M.A. Students",alumni:"Alumni",
+  phdNone:"No doctoral students yet — graduated or enrolled.",
+  pubKicker:"Achievements",pubTitle:"On paper, and on the ground",
+  tabs:["Papers","Projects","Forums","Books"],all:"All",
+  newsKicker:"News",newsTitle:"What is happening in the group",
+  wx:"WeChat Article",moreN:"Read more",less:"Collapse",cnonly:"Chinese only",
+  src:"Source",followKicker:"Follow the Center on WeChat",followName:"珞珈涉外犯罪治理研究 · Luojia Foreign-Related Crime Governance Research",
+  followOpen:"Open the account page",followCopy:"Copy account name",followCopied:"Account name copied — paste it in WeChat “Search” to follow.",
+  search:"Search",sPh:"Search people, papers, projects, news…",
+  gM:"People",gP:"Papers",gJ:"Projects",gF:"Forums",gB:"Books",gN:"News",
+  sEmpty:"No matches. Try “cyber”, “compliance”, or a name.",
+  mBio:"Bio",mDir:"Research directions",mTopic:"Topic",mHon:"Honors",mContact:"Contact",mPub:"Selected outputs",
+  ftAddr:"Law School Building, Wuhan University, Wuhan, China",ftMail:"crcgc@whu.edu.cn (placeholder)",ftNav:"Sitemap"}
+};
+const WX_BIZ = "MzkzNzkxNTcyNw=="; // 珞珈涉外犯罪治理研究 gh_101f8a8c699f
+const WX_HOME = "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=" + encodeURIComponent(WX_BIZ) + "&scene=124#wechat_redirect";
+const IN_WX = /MicroMessenger/i.test(navigator.userAgent);
+let LANG = "zh";
+const t = () => UI[LANG];
+const pick = o => typeof o === "string" ? o : (o[LANG] || o.zh || o.en);
+const missing = o => typeof o !== "string" && !o[LANG];
+
+/* ---------- data ---------- */
+const DIRS = [
+ {zh:{t:"刑法教义学",d:"以行为不法与犯罪参与理论为核心，为新型案件提供可检验的解释框架。",k:["行为不法","犯罪参与","共犯理论","预备犯"]},
+  en:{t:"Criminal Law Doctrine",d:"Core work on wrong-doing and participation theory, supplying testable interpretive frameworks for new case types.",k:["Wrong-doing","Participation","Complicity","Preparatory offences"]}},
+ {zh:{t:"信息网络犯罪",d:"围绕帮助信息网络犯罪活动罪、拒不履行网络安全管理义务罪与网络暴力、深度伪造的刑事规制。",k:["帮信罪","平台义务","网络暴力","深度伪造"]},
+  en:{t:"Information-Network Crime",d:"On aiding information-network criminal activity, providers' security-management obligations, cyber violence and deepfakes.",k:["Aiding offence","Platform duties","Cyber violence","Deepfakes"]}},
+ {zh:{t:"涉外刑事法治",d:"跨境数据流动、电信诈骗产业链与涉外刑事管辖、合规的刑法回应。",k:["跨境网络犯罪","电诈犯罪产业链","《联合国打击网络犯罪公约》"]},
+  en:{t:"Foreign-Related Criminal Rule of Law",d:"Cross-border data flows, telecom-fraud chains, and the criminal-law response to jurisdiction and compliance.",k:["Cross-border cybercrime","Telecom-fraud chains","UN Cybercrime Convention"]}}
+];
+const SUP = {zh:"敬力嘉",en:"Jing Lijia",ini:"敬",
+ role:"sup",
+ bio:{zh:"武汉大学法学院副教授、博士生导师。从事预防刑法、信息网络犯罪与数据合规研究。",en:"Associate Professor at Wuhan University Law School. Works on preventive criminal law, information-network crime and data compliance."},
+ tags:[0,1,2],
+ hon:[{zh:"第二届全国刑法学优秀学术著作奖（2014–2020）二等奖",en:"2nd National Criminal-Law Outstanding Academic Work Award (2014–2020), 2nd prize"},
+      {zh:"第五届全国优秀刑法论文奖（2017–2021）三等奖",en:"5th National Outstanding Criminal-Law Paper Award (2017–2021), 3rd prize"}],
+ contact:{zh:"武汉大学法学院 · 涉外法治学院 · jinglijia11@sina.cn",en:"Law School / School of Foreign-Related Rule of Law, WHU · jinglijia11@sina.cn"},
+ out:{zh:["《论帮助信息网络犯罪活动罪的规范属性》，《法学家》2025 年第 2 期",
+      "《个人信息保护合规的体系构建》，《法学研究》2022 年第 4 期",
+      "《网络暴力法律规制的完善路径》（与胡隽合著），《中国人民公安大学学报（社会科学版）》2021 年第 5 期",
+      "专著《犯罪参与行为的处罚边界：网络时代的新展开》，社会科学文献出版社 2023 年",
+      "专著《信息网络犯罪规制的预防转向与限度》，社会科学文献出版社 2019 年",
+      "创办“网络犯罪治理实务论坛”"],
+  en:["“The Normative Attribute of the Crime of Assisting Information-Network Criminal Activity”, Jurists, 2025(2)",
+      "“Systematic Construction of Personal-Information Protection Compliance”, Chinese Journal of Law, 2022(4)",
+      "“The Perfect Path of Legal Regulation of Cyber Violence” (with Hu Jun), J. People's Public Security Univ. (Soc. Sci.), 2021(5)",
+      "Monograph: The Boundaries of Punishment for Criminal Participation, SSAP, 2023",
+      "Monograph: The Preventive Turn and Its Limits in the Regulation of Information-Network Crimes, SSAP, 2019",
+      "Founder of the Practical Forum on Cybercrime Governance"]}};
+const MEM = {
+ /* real roster as supplied by the group: name + declared major only.
+    Cohorts are entry years; extra fields (thesis title, first employer) can be
+    added per person later as {top:{zh,en}} and will surface in the modal. */
+ phd:[],
+ ms:[
+  {y:2024,list:[
+    {zh:"张恒玮",en:"Zhang Hengwei",mj:{zh:"网络法学",en:"Network Law"}},
+    {zh:"邓淑予",en:"Deng Shuyu",mj:{zh:"刑法学",en:"Criminal Law"}},
+    {zh:"林心悦",en:"Lin Xinyue",mj:{zh:"法律非法学",en:"J.M. (non-law track)"}},
+    {zh:"陈樱",en:"Chen Ying",mj:{zh:"法律非法学",en:"J.M. (non-law track)"}}]},
+  {y:2025,list:[
+    {zh:"朱静文",en:"Zhu Jingwen",mj:{zh:"刑法学",en:"Criminal Law"}},
+    {zh:"谢君毅",en:"Xie Junyi",mj:{zh:"网络法学",en:"Network Law"}},
+    {zh:"吕重光",en:"Lyu Chongguang",mj:{zh:"刑法学",en:"Criminal Law"}},
+    {zh:"周秋辰",en:"Zhou Qiuchen",mj:{zh:"法律法学",en:"LL.M. (law track)"}},
+    {zh:"孙笑然",en:"Sun Xiaoran",mj:{zh:"法律非法学",en:"J.M. (non-law track)"}}]},
+  {y:2026,list:[
+    {zh:"刘易晓",en:"Liu Yixiao",mj:{zh:"刑法学",en:"Criminal Law"}},
+    {zh:"卢思玥",en:"Lu Siyue",mj:{zh:"网络法学",en:"Network Law"}},
+    {zh:"王然",en:"Wang Ran",mj:{zh:"法律法学",en:"LL.M. (law track)"}},
+    {zh:"黄垂润",en:"Huang Chuirun",mj:{zh:"网络法学",en:"Network Law"}},
+    {zh:"王月",en:"Wang Yue",mj:{zh:"法律法学",en:"LL.M. (law track)"}}]}],
+ alumni:[
+  {y:2022,list:[
+    {zh:"罗贯琛",en:"Luo Guanchen",mj:{zh:"网络法学",en:"Network Law"}},
+    {zh:"张卓昊",en:"Zhang Zhuohao",mj:{zh:"法律法学",en:"LL.M. (law track)"}},
+    {zh:"黄露露",en:"Huang Lulu",mj:{zh:"法律非法学",en:"J.M. (non-law track)"}},
+    {zh:"赵谦",en:"Zhao Qian",mj:{zh:"法律法学",en:"LL.M. (law track)"}},
+    {zh:"王子涵",en:"Wang Zihan",mj:{zh:"法律非法学",en:"J.M. (non-law track)"}}]},
+  {y:2023,list:[
+    {zh:"郭锦天",en:"Guo Jintian",mj:{zh:"网络法学",en:"Network Law"}},
+    {zh:"王译杰",en:"Wang Yijie",mj:{zh:"网络法学",en:"Network Law"}},
+    {zh:"薛晓骞",en:"Xue Xiaoqian",mj:{zh:"法律非法学",en:"J.M. (non-law track)"}},
+    {zh:"刘哲",en:"Liu Zhe",mj:{zh:"法律非法学",en:"J.M. (non-law track)"}},
+    {zh:"李芳",en:"Li Fang",mj:{zh:"法律非法学",en:"J.M. (non-law track)"}}]},
+  {y:2024,list:[
+    {zh:"孙畅",en:"Sun Chang",mj:{zh:"法律法学",en:"LL.M. (law track)"}}]}]
+};
+const PUBS = {
+ papers:[
+  {zh:"中国刑法打击网络恐怖主义中前置化倾向的正当性与限度",en:"Legitimation und Grenzen der Vorverlagerungstendenz des chinesischen Strafrechts im Kampf gegen Cyberterrorismus",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"章节论文 · 收录于《Digitalisierung und Strafrecht》（兼副主编），Duncker & Humblot · 2026（待出版）",ven:"Book chapter, in Digitalisierung und Strafrecht (co-editor), Duncker & Humblot, 2026 (forthcoming)",y:2026},
+  {zh:"论帮助信息网络犯罪活动罪的规范属性",en:"The Normative Attribute of the Crime of Assisting Information-Network Criminal Activity",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《法学家》2025 年第 2 期",ven:"Jurists, 2025(2)",y:2025},
+  {zh:"双阶不法判断视域下帮信罪“情节严重”条款的适用",en:"Applying the “Serious Circumstances” Clause of the Crime of Assisting Information-Network Criminal Activity from a Two-Tier Wrongfulness Perspective",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《中国应用法学》2025 年第 4 期",ven:"China Applied Jurisprudence, 2025(4)",y:2025},
+  {zh:"跨境社交平台业务刑事风险及其防控义务",en:"Criminal Risks of Cross-Border Social-Platform Business and the Duties of Prevention and Control",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《南大法学》2025 年第 5 期",ven:"Nanjing University Law Journal, 2025(5)",y:2025},
+  {zh:"我国网络内容“碎片化”治理模式的反思与调适",en:"Reflection and Adjustment of China’s “Fragmented” Model of Online-Content Governance",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《法治社会》2025 年第 5 期",ven:"Rule of Law Society, 2025(5)",y:2025},
+  {zh:"侵犯公民个人信息罪保护法益的厘清",en:"Clarifying the Legal Interest Protected by the Crime of Infringing Citizens’ Personal Information",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《现代法学》2024 年第 5 期",ven:"Modern Law Science, 2024(5)",y:2024},
+  {zh:"网络服务提供者网暴治理义务的体系展开",en:"The Development of the System of Network Service Providers’ Cyber-Violence Governance Obligations",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《北方法学》2023 年第 5 期",ven:"Northern Legal Science, 2023(5)",y:2023},
+  {zh:"网络暴力公私合作治理模式的反思与调试",en:"Reflection and Calibration of the Public-Private Cooperative Governance Model of Cyber Violence",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《江汉论坛》2023 年第 5 期",ven:"Jianghan Tribune, 2023(5)",y:2023},
+  {zh:"规范论视域下身份犯的行为不法内涵与类型",en:"The Content and Types of Wrongfulness of Status Offences from a Normative Perspective",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《政治与法律》2023 年第 6 期",ven:"Political Science & Law, 2023(6)",y:2023},
+  {zh:"个人信息保护合规的体系构建",en:"Systematic Construction of Personal-Information Protection Compliance",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《法学研究》2022 年第 4 期",ven:"Chinese Journal of Law, 2022(4)",y:2022},
+  {zh:"网络暴力法律规制的完善路径",en:"The Perfect Path of Legal Regulation of Cyber Violence",au:{zh:"敬力嘉、胡隽",en:"Jing Lijia & Hu Jun"},vzh:"《中国人民公安大学学报（社科版）》2021 年第 5 期",ven:"J. People’s Public Security Univ. (Soc. Sci.), 2021(5)",y:2021},
+  {zh:"数字货币语境下“过失参与洗钱”的行为不法类型",en:"Types of Wrongfulness of “Negligent Participation in Money Laundering” in the Context of Digital Currency",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《武汉大学学报（哲学社会科学版）》2021 年第 4 期",ven:"Wuhan Univ. J. (Phil. & Soc. Sci.), 2021(4)",y:2021},
+  {zh:"单位犯罪刑事归责中数据合规师的作为义务",en:"The Duty of Data Compliance Officers to Act in the Criminal Imputation of Unit Crimes",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《北方法学》2021 年第 6 期",ven:"Northern Legal Science, 2021(6)",y:2021},
+  {zh:"非法集资犯罪共犯范围的过度扩张及其匡正",en:"Over-Expansion of the Scope of Complicity in Illegal Fundraising Crimes and Its Rectification",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《法商研究》2020 年第 6 期",ven:"Studies in Law and Business, 2020(6)",y:2020},
+  {zh:"作为行为不法类型的犯罪参与——兼论非法发布深度伪造信息的行为不法",en:"Criminal Participation as a Type of Wrongfulness — With a Discussion of the Wrongfulness of Illegally Publishing Deepfake Information",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《华东政法大学学报》2020 年第 6 期",ven:"East China Univ. of Political Science and Law J., 2020(6)",y:2020},
+  {zh:"网络不作为参与行为不法类型的重塑",en:"Reshaping the Types of Wrongfulness of Participation by Omission Online",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《政治与法律》2020 年第 11 期",ven:"Political Science & Law, 2020(11)",y:2020},
+  {zh:"中国的预防性网络犯罪与网络不作为犯罪",en:"Preventive Cybercrime and Cybercrime by Omission in China",au:{zh:"敬力嘉、何荣功",en:"Jing Lijia & He Ronggong"},vzh:"章节论文 · Routledge《Artificial Intelligence and the Law》· 2020 · 第 4 章",ven:"Book chapter, in Artificial Intelligence and the Law, Routledge, 2020, ch. 4",y:2020},
+  {zh:"实质预备犯语境下宣扬恐怖主义、极端主义罪的教义学重述",en:"A Doctrinal Restatement of the Crime of Glorifying Terrorism and Extremism in the Context of Substantive Preparatory Offences",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《当代法学》2019 年第 4 期",ven:"Contemporary Law Review, 2019(4)",y:2019},
+  {zh:"论企业信息权的刑法保护",en:"On the Criminal-Law Protection of Enterprises’ Information Rights",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《北方法学》2019 年第 5 期",ven:"Northern Legal Science, 2019(5)",y:2019},
+  {zh:"信息网络犯罪中集体法益保护范围的扩张与限度",en:"The Expansion and Limit of the Scope of Protected Collective Legal Interest in Information and Cyber Crime",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《政治与法律》2019 年第 11 期",ven:"Political Science & Law, 2019(11)",y:2019},
+  {zh:"大数据环境下侵犯公民个人信息罪法益的应然转向",en:"The Ought-to-Be Turn of the Legal Interest of the Crime of Infringing Citizens’ Personal Information in the Big-Data Environment",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《法学评论》2018 年第 2 期",ven:"Law Review, 2018(2)",y:2018},
+  {zh:"网络参与行为刑事归责的“风险犯”模式及其反思",en:"The “Risk-Offence” Model of Criminal Attribution for Online Participatory Conduct and Its Reconsideration",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《政治与法律》2018 年第 6 期",ven:"Political Science & Law, 2018(6)",y:2018},
+  {zh:"信息网络安全管理义务的刑法教义学展开",en:"The Doctrinal Development of Information-Network Security Management Obligations",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《东方法学》2017 年第 5 期",ven:"Oriental Law, 2017(5)",y:2017},
+  {zh:"论拒不履行网络安全管理义务罪——以网络中介服务者的刑事责任为中心展开",en:"On the Crime of Refusing to Fulfil Network-Security Management Obligations",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《政治与法律》2017 年第 1 期",ven:"Political Science & Law, 2017(1)",y:2017}],
+ projects:[
+  {zh:"武汉大学中央高校基本科研业务费专项资金自主科研项目（2020AI015）",en:"WHU Central-University Basic Research Fund, Self-Directed Project (2020AI015)",au:{zh:"主持",en:"PI"},vzh:"武汉大学 · 2020",ven:"Wuhan University · 2020",y:2020},
+  {zh:"信息网络环境下犯罪参与行为的处罚边界研究（国家社科基金后期资助项目 20FFXB047）",en:"The Boundaries of Punishment for Criminal Participation in the Information-Network Environment (NSSF Post-Funding Project 20FFXB047)",au:{zh:"主持",en:"PI"},vzh:"国家社科基金后期资助项目 · 2020",ven:"National Social Science Fund Post-Funding Project · 2020",y:2020},
+  {zh:"跨境电诈案件法律适用问题研究（最高人民检察院检察应用理论研究课题第 18 号）",en:"Legal Application in Cross-Border Telecom-Fraud Cases (SPP Applied Procuratorial Theory Project No. 18)",au:{zh:"主持",en:"PI"},vzh:"最高人民检察院 · 2025",ven:"Supreme People’s Procuratorate · 2025",y:2025},
+  {zh:"《联合国打击网络犯罪公约》附加议定书谈判前瞻性研究（外交部政策研究年度课题）",en:"Forward-Looking Study on the Negotiation of the Additional Protocol to the UN Convention against Cybercrime (MFA Annual Policy Research Project)",au:{zh:"主持",en:"PI"},vzh:"外交部 · 2025",ven:"Ministry of Foreign Affairs · 2025",y:2025},
+  {zh:"国内野生动物宠物网络市场外来物种状况研究（中国野生动物保护协会委托课题）",en:"Study on Invasive Species in China’s Online Wildlife-Pet Market (Commissioned by CWCA)",au:{zh:"主持",en:"PI"},vzh:"中国野生动物保护协会 · 2025",ven:"China Wildlife Conservation Association · 2025",y:2025},
+  {zh:"网络暴力防治研究（中央网信办委托国家智库高端课题）",en:"Research on the Prevention and Control of Cyber Violence (High-End Think-Tank Project commissioned by the Cyberspace Administration of China)",au:{zh:"主持",en:"PI"},vzh:"中央网信办 · 2019",ven:"Cyberspace Administration of China · 2019",y:2019},
+  {zh:"“深度伪造”问题的刑事规制与限度研究（中国法学会部级研究课题青年调研项目 CLS(2019)Y04）",en:"Criminal Regulation and Limits of Deepfakes (CLS Ministerial Youth Research Project CLS(2019)Y04)",au:{zh:"主持",en:"PI"},vzh:"中国法学会 · 2019",ven:"China Law Society · 2019",y:2019},
+  {zh:"网络深度伪造技术的刑事规制与限度（中国政法大学网络法治研究院网络法治理论研究项目）",en:"Criminal Regulation and Limits of Deepfake Technology (CUPL Institute of Cyber-Rule-of-Law Research Project)",au:{zh:"主持",en:"PI"},vzh:"中国政法大学 · 2019",ven:"China University of Political Science and Law · 2019",y:2019},
+  {zh:"信息网络犯罪刑事归责的预防转向与法治限度（中国博士后科学基金第 64 批面上资助 2018M642886）",en:"The Preventive Turn and Legal Limits of Criminal Attribution in Information-Network Crime (China Social Science Postdoctoral Fund 2018M642886)",au:{zh:"主持",en:"PI"},vzh:"中国博士后科学基金 · 2018",ven:"China Social Science Postdoctoral Fund · 2018",y:2018},
+  {zh:"网络时代的社会治理与刑法体系的理论创新研究（国家社科基金重大项目 20&ZD199）",en:"Social Governance and Theoretical Innovation of the Criminal-Law System in the Network Era (NSSF Major Project 20&ZD199)",au:{zh:"参与",en:"Participant"},vzh:"国家社科基金重大项目 · 2020",ven:"NSSF Major Project · 2020",y:2020},
+  {zh:"危机情境下网络信息传播失序识别与干预方法研究（国家自然科学基金面上项目 72174153）",en:"Identification and Intervention of Disordered Online Information Diffusion in Crisis Situations (NSFC General Program 72174153)",au:{zh:"参与",en:"Participant"},vzh:"国家自然科学基金 · 2021",ven:"National Natural Science Foundation of China · 2021",y:2021},
+  {zh:"反有组织犯罪法（中国法学会重大委托课题 CLS(2019)ZDWT0-1）",en:"Law against Organized Crime (CLS Major Commissioned Project CLS(2019)ZDWT0-1)",au:{zh:"参与",en:"Participant"},vzh:"中国法学会 · 2019",ven:"China Law Society · 2019",y:2019},
+  {zh:"提高反恐怖主义情报信息工作能力对策研究（教育部哲社重大课题攻关项目 17JZD034）",en:"Countermeasures for Improving Counter-Terrorism Intelligence Capability (MOE Major Project 17JZD034)",au:{zh:"参与",en:"Participant"},vzh:"教育部 · 2017",ven:"Ministry of Education · 2017",y:2017}],
+ forums:[
+  {zh:"南京大学法学院学术系列讲座：实体程序交互视域下电诈犯罪产业链的归责路径",en:"Academic lecture at Nanjing University Law School: attribution paths in telecom-fraud chains",au:{zh:"主讲人",en:"Speaker"},vzh:"南京大学法学院 · 2025-10-23",ven:"NJU Law School · 2025-10-23",y:2025}],
+ books:[
+  {zh:"Digitalisierung und Strafrecht（数字化与刑法）",en:"Digitalisierung und Strafrecht (Digitalisation and Criminal Law)",au:"副主编 · 待出版 / Co-editor · forthcoming",vzh:"Duncker & Humblot · 2026（待出版）",ven:"Duncker & Humblot · 2026 (forthcoming)",y:2026},
+  {zh:"犯罪参与行为的处罚边界：网络时代的新展开",en:"The Boundaries of Punishment for Criminal Participation: New Developments in the Network Era",au:"独著",vzh:"社会科学文献出版社 · 2023",ven:"SSAP · 2023",y:2023},
+  {zh:"网络刑法原理",en:"Principles of Cyber Criminal Law",au:"参编 · 主编江溯",vzh:"北京大学出版社 · 2022",ven:"Peking Univ. Press · 2022 · ed. Jiang Su",y:2022},
+  {zh:"信息网络犯罪规制的预防转向与限度",en:"The Preventive Turn and Its Limits in the Regulation of Information-Network Crimes",au:"独著",vzh:"社会科学文献出版社 · 2019",ven:"SSAP · 2019",y:2019}]
+};
+const NEWS = [
+ {tag:1,d:"2026-09-21",zh:{t:"《思想战线》刊载第三届网络犯罪治理实务论坛综述",s:"课题组公众号刊出论坛暨“跨境网络犯罪治理疑难问题”学术研讨会综述，见《思想战线》2026 年第 5 期。",b:"综述回顾论坛各单元围绕跨境网络犯罪治理疑难问题的讨论。"},
+  en:{t:"Thought Front publishes summary of the 3rd Forum on Practical Governance of Cybercrime",s:"The group's WeChat account posted the summary of the forum and the “Cross-Border Cybercrime Governance: Difficult Issues” symposium, published in Thought Front, 2026(5).",b:"The summary recaps the panel discussions on cross-border cybercrime governance."}},
+ {tag:6,d:"2026-09-21",url:"http://epaper.legaldaily.com.cn/fzrb/content/20260921/Articel05002GN.htm",zh:{t:"中心主任敬力嘉就全球反诈合作接受《法治日报》采访",s:"报道《多边共治开启全球反诈新模式》刊发，课题组公众号转载。",b:"采访围绕由中国发起、聚焦电信网络诈骗及关联犯罪的公约机制展开。"},
+  en:{t:"Director Jing Lijia interviewed by Legal Daily on global anti-fraud cooperation",s:"The report “Multi-lateral co-governance opens a new model for global anti-fraud efforts” was published and reposted by the group account.",b:"The interview centres on the China-initiated convention mechanism targeting telecom fraud and related crime."}},
+ {tag:1,d:"2026-07-10",url:"https://law.imu.edu.cn/info/1035/3450.htm",zh:{t:"第三届网络犯罪治理实务论坛在昆明成功举办",s:"论坛暨“跨境网络犯罪治理疑难问题”学术研讨会于 7 月 10 日至 12 日在云南省昆明市举办。",b:"中心撰写会议综述，刊于《思想战线》2026 年第 5 期。"},
+  en:{t:"3rd Forum on Practical Governance of Cybercrime held in Kunming",s:"The forum and the “Cross-Border Cybercrime Governance: Difficult Issues” symposium took place in Kunming, Yunnan, on 10–12 July.",b:"The center wrote the forum summary, published in Thought Front, 2026(5)."}},
+ {tag:1,d:"2026-06-06",url:"https://law.csu.edu.cn/info/1101/9423.htm",zh:{t:"第二届网络犯罪研究学术联盟年会第三专题与谈",s:"年会主题为“网络犯罪向数字犯罪转型背景下的刑法理论创新”，中心教师作与谈人。",b:""},
+  en:{t:"Third-session commentator at the 2nd Annual Meeting of the Cybercrime Research Alliance",s:"The meeting theme was “Criminal-law theory innovation as cybercrime shifts to digital crime”.",b:""}},
+ {tag:1,d:"2026-03-28",url:"https://www.law.sdu.edu.cn/info/1067/16181.htm",zh:{t:"山东大学刑法学国际研讨会“法益理论的未来”与谈",s:"中心教师于第六单元“人的法益理论”作与谈人。",b:""},
+  en:{t:"Commentator at Shandong Univ. international symposium “The Future of Legal-Interest Theory”",s:"Center faculty commented in Session VI, “The Theory of Personal Legal Interests”.",b:""}},
+ {tag:4,d:"2025-12-17",zh:{t:"组内读书会：课程与专业学习答疑",s:"朱静文、谢君毅分别汇报个人论文《刑法中明知的推定》《涉虚拟货币的非法经营罪的司法认定》并交流讨论。",b:""},
+  en:{t:"Reading group: Q&A on coursework and professional study",s:"Zhu Jingwen and Xie Junyi presented their papers “Presumption of Knowledge in Criminal Law” and “Judicial Determination of Illegal Business Offences Involving Virtual Currency”.",b:""}},
+ {tag:1,d:"2025-11-01",url:"https://www.scuec.edu.cn/fxy/info/1079/2690.htm",zh:{t:"第二届珞珈网络犯罪治理实务论坛举办",s:"中心参与联合举办“数字法治视域下电信网络诈骗犯罪疑难问题”学术研讨会，敬力嘉作会议总结。",b:""},
+  en:{t:"2nd Luojia Forum on Practical Governance of Cybercrime held",s:"The center co-hosted the symposium “Difficult Issues in Telecom Fraud under Digital Rule of Law”; Jing Lijia delivered the closing summary.",b:""}},
+ {tag:0,d:"2025-10-23",url:"https://law.nju.edu.cn/info/1086/22511.htm",zh:{t:"中心教师主讲南京大学法学院学术讲座",s:"讲座题目为“实体程序交互视域下电诈犯罪产业链的归责路径”。",b:""},
+  en:{t:"Center faculty delivers academic lecture at Nanjing University Law School",s:"The lecture was titled “Attribution Paths in Telecom-Fraud Chains from an Entity–Procedure Interaction Perspective”.",b:""}},
+ {tag:3,d:"2025-06-19",url:"https://www.houqilawyer.com/eventhighlights/info.aspx?itemid=2501",zh:{t:"中心教师受聘浙江厚启律师事务所专家顾问",s:"双方就“网络犯罪司法实践与理论创新”座谈，分享电诈犯罪治理研究。",b:""},
+  en:{t:"Center faculty appointed expert consultant at Houqi Law Firm",s:"A symposium on “Judicial Practice and Theoretical Innovation in Cybercrime” was held, sharing research on telecom-fraud governance.",b:""}},
+ {tag:4,d:"2025-06-06",zh:{t:"组内读书会：学习情况与暑假安排交流",s:"张恒玮汇报个人论文《数据爬取行为的法律规制》并交流讨论。",b:""},
+  en:{t:"Reading group: study progress and summer arrangements",s:"Zhang Hengwei presented his paper “Legal Regulation of Data-Scraping Conduct” for group discussion.",b:""}},
+ {tag:0,d:"2025-04-25",url:"http://www.news.cn/digital/20250425/224ffae38cc04d77998934ded227a34d/c.html",zh:{t:"第二届武汉网络安全创新论坛·个人信息保护分论坛发言",s:"中心教师从刑法视角谈网络黑灰产业链治理。",b:""},
+  en:{t:"Speech at the 2nd Wuhan Cybersecurity Innovation Forum, personal-information panel",s:"Center faculty discussed governance of online black–grey industries from a criminal-law perspective.",b:""}}
+];
+const TAGS = [{zh:"学术活动",en:"Academic",c:"#3E5B26",bg:"rgba(127,160,90,.16)"},
+ {zh:"学术论坛",en:"Forum",c:"#3E5B26",bg:"rgba(127,160,90,.16)"},
+ {zh:"调研考察",en:"Fieldwork",c:"#3E5B26",bg:"rgba(127,160,90,.12)"},
+ {zh:"合作交流",en:"Cooperation",c:"#3E5B26",bg:"rgba(127,160,90,.12)"},
+ {zh:"组内动态",en:"Group Life",c:"#6E6558",bg:"rgba(110,101,88,.12)"},
+ {zh:"荣誉获奖",en:"Honors",c:"#3E5B26",bg:"rgba(127,160,90,.20)"},
+ {zh:"媒体报道",en:"In Media",c:"#3E5B26",bg:"rgba(127,160,90,.16)"}];
+
+/* ---------- state ---------- */
+let pubTab = 0, pubYear = "all", sFilter = "all", sAct = 0, sResults = [];
+
+/* ---------- render ---------- */
+/* split a title into per-char (zh) / per-word (en) reveal spans */
+const words=s=>{const isZh=/[一-鿿]/.test(s);const u=isZh?Array.from(s):s.split(/\s+/).filter(Boolean);
+  return u.map((w,i)=>`<span class="w" style="--i:${i}">${w}</span>`).join(isZh?"":" ");};
+function renderStatic(){
+  document.documentElement.lang = LANG==="zh"?"zh-CN":"en";
+  document.getElementById("hdName").textContent = t().hd;
+  document.getElementById("hdNameEn").textContent = t().hdSub;
+  document.getElementById("lzT").textContent = t().hd;
+  document.getElementById("lzS").textContent = t().hdSub;
+  document.getElementById("nav").innerHTML = t().nav.map((n,i)=>{
+    const ids=["home","about","members","pubs","news"];
+    return `<a href="#${ids[i]}" data-sec="${ids[i]}">${n}</a>`;}).join("");
+  document.getElementById("sLabel").textContent = t().search;
+  document.getElementById("heroKicker").textContent = t().heroKicker;
+  const h1=document.getElementById("heroTitle");
+  h1.classList.remove("on");
+  h1.innerHTML = t().heroTitle.split("<br>").map((s,i)=>`<span class="lm" style="--d:${(0.1+i*0.11).toFixed(2)}s"><i>${s}</i></span>`).join("");
+  void h1.offsetWidth;
+  h1.classList.add("on");
+  const lm=s=>`<span class="lm"><i>${s}</i></span>`;
+  document.getElementById("heroLead").textContent = t().heroLead;
+  document.getElementById("aboutName").innerHTML = words(t().aboutKicker);
+  document.getElementById("aboutLead").innerHTML = words(t().aboutTitle);
+  document.getElementById("aboutSub").textContent = t().aboutSub;
+  document.getElementById("epi2").innerHTML = "<b>"+words(t().epi2)+"</b>";
+  document.getElementById("memName").innerHTML = words(t().memKicker);
+  document.getElementById("memLead").innerHTML = words(t().memTitle);
+  document.getElementById("memSub").textContent = t().memSub;
+  document.getElementById("pubName").innerHTML = words(t().pubKicker);
+  document.getElementById("pubLead").innerHTML = words(t().pubTitle);
+  document.getElementById("newsName").innerHTML = words(t().newsKicker);
+  document.getElementById("newsLead").innerHTML = words(t().newsTitle);
+  document.getElementById("fKicker").textContent = t().followKicker;
+  document.getElementById("fName").textContent = t().followName;
+  document.getElementById("fBtn").textContent = IN_WX ? t().followOpen : t().followCopy;
+  document.getElementById("ftName").textContent = UI.zh.hd;
+  document.getElementById("ftAddr").textContent = t().ftAddr;
+  document.getElementById("ftMail").textContent = t().ftMail;
+  document.getElementById("ftNav").textContent = t().ftNav;
+  document.getElementById("ftLinks").innerHTML = t().nav.map((n,i)=>{
+    const ids=["home","about","members","pubs","news"];
+    return `<a href="#${ids[i]}">${n}</a>`;}).join("");
+  document.getElementById("sin").placeholder = t().sPh;
+}
+function renderDirs(){
+  document.getElementById("dirs").innerHTML = DIRS.map((d,i)=>`
+    <div class="dir rv" style="--d:${i*0.08}s">
+      <h3>${pick(d).t}</h3><p>${pick(d).d}</p>
+      <div class="kw">${pick(d).k.map(k=>`<i>${k}</i>`).join("")}</div></div>`).join("");
+}
+const PHOTO_URI="data:image/webp;base64,{{PHOTO_B64}}";
+function personModalData(p,isSup){
+  return {ini:p.ini||(p.zh||p).slice(0,1),name:pick(p),
+    role:isSup?t().sup:[p.grp==="ms"?t().ms:p.grp==="alumni"?t().alumni:t().phd, p.cohort?pick({zh:p.cohort+" 级硕士",en:"M.A. "+p.cohort+" entry"}):null, p.mj?pick(p.mj):null].filter(Boolean).join(" · "),
+    bio:isSup?pick(p.bio):null,dirs:isSup?p.tags.map(i=>pick(DIRS[i]).t):(p.t!=null?[pick(DIRS[p.t]).t]:[]),
+    topic:(p.top?pick(p.top):null),hon:isSup?p.hon.map(h=>pick(h)):null,
+    contact:isSup?pick(p.contact):t().ftMail,
+    photo:isSup?PHOTO_URI:null,
+    pubs:isSup?pick(p.out):null};
+}
+function openModal(d,cls){
+  document.getElementById("mBody").innerHTML = `
+    <div class="top">${d.photo?`<div class="ava photo"><img src="${d.photo}" alt="${d.name}"></div>`:`<div class="ava ${cls||"g"}">${d.ini}</div>`}
+      <div><h3>${d.name}</h3><div class="role">${d.role}</div></div></div>
+    ${d.bio?`<div class="sec"><h5>${t().mBio}</h5><p>${d.bio}</p></div>`:""}
+    ${d.dirs&&d.dirs.length?`<div class="sec"><h5>${t().mDir}</h5><div class="chips">${d.dirs.map(x=>`<i>${x}</i>`).join("")}</div></div>`:""}
+    ${d.topic?`<div class="sec"><h5>${t().mTopic}</h5><p>${d.topic}</p></div>`:""}
+    ${d.hon?`<div class="sec"><h5>${t().mHon}</h5><ul>${d.hon.map(x=>`<li>${x}</li>`).join("")}</ul></div>`:""}
+    ${d.pubs?`<div class="sec"><h5>${t().mPub}</h5><ul>${d.pubs.map(x=>`<li>${x}</li>`).join("")}</ul></div>`:""}
+    <div class="sec"><h5>${t().mContact}</h5><p class="mail">${d.contact}</p></div>`;
+  document.getElementById("mov").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeModal(){document.getElementById("mov").classList.remove("open");document.body.style.overflow="";}
+function renderMembers(){
+  const s=SUP;
+  document.getElementById("supCard").innerHTML = `
+    <div class="ava photo"><img src="${PHOTO_URI}" alt="${pick(s)}"></div>
+    <div><h3>${pick(s)}</h3><div class="role">${t().sup}</div>
+      <p>${pick(s.bio)}</p>
+      <div class="tags">${s.tags.map(i=>`<i>${pick(DIRS[i]).t}</i>`).join("")}</div>
+      <div class="hon">${s.hon.map(h=>pick(h)).join("<br>")}</div>
+      <div class="more">${t().more}</div></div>`;
+  const groups=[["phd",MEM.phd,t().phd],["ms",MEM.ms,t().ms],["alumni",MEM.alumni,t().alumni]];
+  const tot=cs=>cs.reduce((n,ch)=>n+ch.list.length,0);
+  document.getElementById("groups").innerHTML = groups.map(([k,cohorts,label])=>`
+    <div class="grp"><div class="gh rv"><h3>${label}</h3><span class="c">${tot(cohorts)}</span><span class="rule"></span></div>
+      ${cohorts.length?cohorts.map((ch,ci)=>`
+      <div class="yrow rv" style="--d:.0${Math.min(9,ci+2)}s">
+        <div class="yl">${pick({zh:ch.y+" 级硕士",en:"M.A. · "+ch.y+" entry"})}</div>
+        <div class="chips">${ch.list.map((m,li)=>`<button class="mchip" data-m="${k}:${ci}:${li}">
+          <b>${pick(m)}</b><i>${pick(m.mj)}</i></button>`).join("")}</div>
+      </div>`).join(""):`<p class="none rv">${t().phdNone}</p>`}
+    </div>`).join("");
+}
+function bindDrag(tr){
+  let down=false,sx=0,sl=0;
+  tr.addEventListener("pointerdown",e=>{down=true;sx=e.clientX;sl=tr.scrollLeft;tr.style.scrollSnapType="";tr.classList.add("drag");tr.setPointerCapture(e.pointerId);});
+  tr.addEventListener("pointermove",e=>{if(down)tr.scrollLeft=sl-(e.clientX-sx);});
+  ["pointerup","pointercancel","pointerleave"].forEach(ev=>tr.addEventListener(ev,()=>{down=false;tr.classList.remove("drag");}));
+  const bar=tr.closest(".car").querySelector(".bar i");
+  const barWrap=bar.parentElement;
+  const grp=tr.closest(".grp");
+  const gk=tr.dataset.g;
+  const gpCur=grp.querySelector(".gp b");
+  const gpTot=grp.querySelector(".gp s");
+  const prevBtn=grp.querySelector('.cbtn[data-cnav="'+gk+':-1"]');
+  const nextBtn=grp.querySelector('.cbtn[data-cnav="'+gk+':1"]');
+  const pad=n=>String(n).padStart(2,"0");
+  const upd=()=>{const max=tr.scrollWidth-tr.clientWidth;
+    if(max<1){barWrap.style.opacity="0";}else{barWrap.style.opacity="1";bar.style.width=(12+88*(tr.scrollLeft/max))+"%";}};
+  const geom=()=>{
+    const max=tr.scrollWidth-tr.clientWidth;
+    const pages=max<1?1:Math.max(2,Math.ceil(tr.scrollWidth/tr.clientWidth));
+    const cur=pages<2?1:Math.max(1,Math.min(pages,1+Math.round(tr.scrollLeft/max*(pages-1))));
+    return {max,pages,cur};
+  };
+  const paint=()=>{
+    const {max,pages,cur}=geom();
+    if(max<1){grp.classList.add("nocar");}else{grp.classList.remove("nocar");}
+    if(gpCur)gpCur.textContent=pad(cur);
+    if(gpTot)gpTot.textContent=pad(pages);
+    if(prevBtn)prevBtn.toggleAttribute("disabled",cur<=1);
+    if(nextBtn)nextBtn.toggleAttribute("disabled",cur>=pages);
+    upd();
+  };
+  const goPage=p=>{
+    const {max,pages}=geom();
+    if(pages<2||max<1)return;
+    const q=Math.max(1,Math.min(pages,p));
+    tr.style.scrollSnapType="none";
+    tr.scrollTo({left:Math.round((q-1)/(pages-1)*max),behavior:"auto"});
+    paint();
+  };
+  if(prevBtn)prevBtn.addEventListener("click",()=>goPage(geom().cur-1));
+  if(nextBtn)nextBtn.addEventListener("click",()=>goPage(geom().cur+1));
+  tr.addEventListener("scroll",paint,{passive:true});addEventListener("resize",paint);paint();
+}
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = t().tabs.map((x,i)=>
+    `<button class="${i===pubTab?"on":""}" data-tab="${i}">${x}</button>`).join("");
+  const keys=["papers","projects","forums","books"];
+  const years=[...new Set(PUBS[keys[pubTab]].map(p=>p.y).filter(Boolean))].sort((a,b)=>b-a);
+  document.getElementById("ychips").innerHTML = years.map(y=>
+    `<button class="${String(y)===String(pubYear)?"on":""}" data-year="${y}">${y}</button>`).join("")
+    + `<button class="${pubYear==="all"?"on":""}" data-year="all">${t().all}</button>`;
+}
+function renderPubs(){
+  const keys=["papers","projects","forums","books"];
+  let items=PUBS[keys[pubTab]].filter(p=>pubYear==="all"||p.y===+pubYear);
+  document.getElementById("pubList").innerHTML = items.map((p,i)=>`
+    <div class="pub rv" style="--d:${i*0.05}s"><span class="no">${String(i+1).padStart(2,"0")}</span>
+      <div><b>${pick(p)}</b><div class="meta">${pubTab===3?`<span class="rchip">${p.au}</span>`:pick(p.au)}</div></div>
+      <span class="venue">${LANG==="zh"?p.vzh:p.ven}</span></div>`).join("")
+    || `<p class="sempty" style="color:var(--ink-mut)">${LANG==="zh"?"该年份暂无记录":"No records for this year."}</p>`;
+}
+function renderNews(){
+  document.getElementById("newsList").innerHTML = NEWS.map((n,i)=>{
+    const c=pick(n),m=missing(n),tg=TAGS[n.tag];
+    const cn=m?`<span class="cnonly">${t().cnonly}</span>`:"";
+    const wx=n.wx?`<span class="wxBadge">${t().wx}</span>`:"";
+    return `<div class="ncard rv ${n.wx?"ext":""}" style="--d:${i*0.05}s" data-n="${i}">
+      <div class="mh"><span class="tag" style="color:${tg.c};background:${tg.bg}">${LANG==="zh"?tg.zh:tg.en}</span>
+        <span class="dt">${n.d}</span>${wx}${cn}${n.url?`<a class="nsrc" href="${n.url}" target="_blank" rel="noopener">${t().src}</a>`:""}</div>
+      <h3>${c.t}</h3><p class="sum">${c.s}</p>
+      ${c.b?`<div class="body">${c.b}</div><button class="more">${t().moreN} ↓</button>`:""}</div>`;}).join("");
+}
+function renderAll(){renderStatic();renderDirs();renderMembers();renderTabs();renderPubs();renderNews();observe();buildSpine();}
+
+/* ---------- search ---------- */
+function buildIndex(){
+  const ix=[];
+  ix.push({ty:"gM",title:pick(SUP),sub:pick(SUP.bio),act:()=>openModal(personModalData(SUP,true),"g")});
+  Object.entries(MEM).forEach(([k,cohorts])=>cohorts.forEach((ch,ci)=>ch.list.forEach((m,li)=>ix.push({ty:"gM",title:pick(m),sub:pick(m.mj)+" · "+ch.y,act:()=>{const d=personModalData(Object.assign({grp:k,cohort:ch.y},m),false);openModal(d,k==="ms"?"b":"g");}}))));
+  PUBS.papers.forEach(p=>ix.push({ty:"gP",title:pick(p),sub:LANG==="zh"?p.vzh:p.ven,act:()=>goto("pubs")}));
+  PUBS.projects.forEach(p=>ix.push({ty:"gJ",title:pick(p),sub:LANG==="zh"?p.vzh:p.ven,act:()=>goto("pubs")}));
+  PUBS.forums.forEach(p=>ix.push({ty:"gF",title:pick(p),sub:LANG==="zh"?p.vzh:p.ven,act:()=>goto("pubs")}));
+  PUBS.books.forEach(p=>ix.push({ty:"gB",title:pick(p),sub:LANG==="zh"?p.vzh:p.ven,act:()=>goto("pubs")}));
+  NEWS.forEach((n,i)=>{const c=pick(n);if(c)ix.push({ty:"gN",title:c.t,sub:n.d,act:()=>{goto("news");setTimeout(()=>{const el=document.querySelector(`[data-n="${i}"]`);if(el){el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1500);}},350);}});});
+  return ix;
+}
+const TYPEMAP={gM:["gM"],gP:["gP"],gJ:["gJ"],gF:["gF"],gB:["gB"],gN:["gN"]};
+function runSearch(){
+  const q=document.getElementById("sin").value.trim().toLowerCase();
+  const ix=buildIndex();
+  sResults=ix.filter(it=>(sFilter==="all"||it.ty===sFilter)&&(!q||(it.title+it.sub).toLowerCase().includes(q))).slice(0,24);
+  sAct=0;drawSearch(q);
+}
+function hl(s,q){if(!q)return s;const i=s.toLowerCase().indexOf(q);if(i<0)return s;return s.slice(0,i)+"<mark>"+s.slice(i,i+q.length)+"</mark>"+s.slice(i+q.length);}
+function drawSearch(q){
+  const box=document.getElementById("sres");
+  if(!sResults.length){box.innerHTML=`<div class="sempty">${t().sEmpty}</div>`;return;}
+  let html="",last="";
+  sResults.forEach((it,i)=>{
+    if(it.ty!==last){html+=`<div class="sgrp">${t()[it.ty]}</div>`;last=it.ty;}
+    html+=`<div class="sitem ${i===sAct?"act":""}" data-i="${i}"><span class="ty">${t()[it.ty]}</span><span><span class="ti">${hl(it.title,q)}</span><div class="si">${hl(it.sub,q)}</div></span></div>`;});
+  box.innerHTML=html;
+}
+function openSearch(){document.getElementById("sov").classList.add("open");document.body.style.overflow="hidden";
+  document.getElementById("schips").innerHTML=[["all",t().all],["gM",t().gM],["gP",t().gP],["gJ",t().gJ],["gF",t().gF],["gB",t().gB],["gN",t().gN]]
+    .map(([k,l])=>`<button class="${sFilter===k?"on":""}" data-f="${k}">${l}</button>`).join("");
+  setTimeout(()=>{document.getElementById("sin").focus();runSearch();},30);}
+function closeSearch(){document.getElementById("sov").classList.remove("open");document.body.style.overflow="";}
+function goto(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"});}
+
+/* ---------- spine ---------- */
+function buildSpine(){
+  const svg=document.getElementById("spineSvg");
+  const page=document.getElementById("page");
+  const H=page.scrollHeight,W=page.clientWidth;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.style.height=H+"px";
+  const gut=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--gut"))||72;
+  const tree=document.getElementById("treeWrap").getBoundingClientRect();
+  const pr=page.getBoundingClientRect();
+  const homeB=document.getElementById("about").getBoundingClientRect().top-pr.top;
+  const tx=tree.left-pr.left+tree.width*0.5,
+        ty=Math.min(tree.top-pr.top+tree.height*0.80, homeB-30);
+  let d=`M ${tx} ${ty} C ${tx-60} ${ty+90}, ${gut+150} ${homeB-40}, ${gut} ${homeB+70}`;
+  const footTop=document.querySelector("footer").getBoundingClientRect().top-pr.top;
+  d+=` L ${gut} ${footTop-30}`;
+  let branches="",nodes="",dots="";
+  [["about"],["members"],["pubs"],["news"]].forEach(([id])=>{
+    const sec=document.getElementById(id);const r=sec.getBoundingClientRect();
+    const y=r.top-pr.top+118;
+    branches+=`<path class="branch" data-y="${y}" d="M ${gut} ${y} H ${Math.min(W-40,gut+(W>900? 30:20))}"/>`;
+    nodes+=`<circle class="node" data-y="${y}" cx="${gut}" cy="${y}" r="4.5"/>`;});
+  document.querySelectorAll(".ncard").forEach(c=>{
+    const r=c.getBoundingClientRect();const y=r.top-pr.top+30;
+    dots+=`<circle class="ndot" data-y="${y}" cx="${gut}" cy="${y}" r="3.4"/>`;});
+  svg.innerHTML=`<path class="root" id="rootP" d="M ${tx} ${ty} C ${tx-60} ${ty+90}, ${gut+150} ${homeB-40}, ${gut} ${homeB+70}"/>
+    <path class="main" id="mainP" d="M ${gut} ${homeB+70} L ${gut} ${footTop-30}"/>${branches}${nodes}${dots}`;
+  const mp=document.getElementById("mainP"),rp=document.getElementById("rootP");
+  [mp,rp].forEach(p=>{const L=p.getTotalLength();p.style.strokeDasharray=L;p.dataset.len=L;});
+  spineMeta={mp,rp, startY:homeB+70, endY:footTop-30};
+  onScroll();
+}
+let spineMeta=null;
+function onScroll(){
+  const sy=window.scrollY,vh=innerHeight;
+  const hdEl=document.querySelector("header");
+  hdEl.classList.toggle("scrolled",sy>32);
+  /* suspend the header frost while moving; restore once scrolling settles */
+  hdEl.classList.add("scrolling");
+  clearTimeout(window.__scT);
+  window.__scT=setTimeout(()=>hdEl.classList.remove("scrolling"),160);
+  /* full-width bar tints with the chapter under it: paper on light, ink on dark */
+  let topSec=null;
+  for(const id of ["home","about","members","pubs","news"]){
+    const s=document.getElementById(id);if(!s)continue;
+    const r=s.getBoundingClientRect();
+    if(r.top<=64&&r.bottom>64){topSec=s;break;}
+  }
+  hdEl.classList.toggle("on-paper",!!topSec&&(topSec.classList.contains("on-paper")||(topSec.id==="home"&&sy<topSec.offsetHeight*0.55)));
+  if(spineMeta){
+    const {mp,rp,startY,endY}=spineMeta;
+    const p=Math.max(0,Math.min(1,(sy+vh*0.72-startY)/(endY-startY)));
+    mp.style.strokeDashoffset=mp.dataset.len*(1-p);
+    const L=+rp.dataset.len;rp.style.strokeDashoffset=sy>40?0:L;
+    rp.style.transition="stroke-dashoffset 1.2s ease";
+    document.querySelectorAll("#spineSvg [data-y]").forEach(el=>{
+      el.classList.toggle("on",+el.dataset.y < sy+vh*0.86);});
+  }
+  document.querySelectorAll("nav a[data-sec]").forEach(a=>{
+    const sec=document.getElementById(a.dataset.sec);if(!sec)return;
+    const r=sec.getBoundingClientRect();
+    const act=r.top<=vh*0.4&&r.bottom>vh*0.4;
+    a.classList.toggle("on",act);});
+}
+
+/* ---------- motion: particles + globe + canopy breathing + WIND ---------- */
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let parts=[],leaves=[],birds=[],mouse={x:-9999,y:-9999},px=0,py=0,syT=0,sy=0,lastNavSy=-1;
+let wind=0,windV=0,lx=0,ly=0,whist=[];
+function initCanvas(){
+  const pc=document.getElementById("partCv"),gc=document.getElementById("globeCv");
+  const bc=document.getElementById("birdCv"),rc=document.getElementById("rootCv"),fc=document.getElementById("fgRootCv");
+  const hero=document.getElementById("home");
+  let lastRot=1e9,globeDirty=true,gA=.8;
+  /* backing-store scales: birds/fgRoots render below devicePixelRatio on purpose —
+     the browser's upscale smoothing is the soft-focus look, replacing a per-frame
+     canvas gaussian blur (ctx.filter) that cost several ms every frame. The globe
+     caps at 1.5 because its dot grid is soft squares anyway. */
+  let dB=1,dF=1,gD=1;
+  /* pre-rendered halo + text-mask gradient sprites (rebuilt only on resize) so the
+     per-frame globe paint is drawImage blits, not createRadialGradient + fill */
+  let haloSpr=null,haloCss=0,maskSpr=null,maskRx=0,maskRy=0;
+  /* doc-space rects cached on resize: the per-frame path must never call
+     getBoundingClientRect (it forces a sync layout after our style writes) */
+  let gHero={l:0,t:0,w:0,h:0},gCan={l:0,t:0};
+  /* doc-space offsets + element refs cached on resize / language change, so the
+     per-frame loop does zero DOM queries and zero layout reads */
+  let abDocTop=0,shdEls=[],shdDocMid=[];
+  const EL={};
+  function cacheDocOffsets(){
+    const s0=window.scrollY;
+    const ab=document.getElementById("about");
+    abDocTop=ab?ab.getBoundingClientRect().top+s0:0;
+    shdEls=[].slice.call(document.querySelectorAll(".shd"));
+    shdDocMid=shdEls.map(el=>{const r=el.getBoundingClientRect();return r.top+s0+r.height/2;});
+    ["treeWrap","globeCv","islandCanopy","islandMid","fgBranch","abGrid"]
+      .forEach(id=>EL[id]=document.getElementById(id));
+    window.__cacheDoc=cacheDocOffsets;
+  }
+  /* hero-text rect cached in canvas CSS-px space; only re-read when scroll moves,
+     so drawGlobe never forces a sync layout while the globe spins in place */
+  let gMask={x:0,y:0,w:0,h:0},gMaskSy=-1e9;
+  const heroTxtEl=document.querySelector(".hero-txt");
+  function cacheGlobeRects(){
+    const s0=window.scrollY;
+    if(heroTxtEl){const hr=heroTxtEl.getBoundingClientRect();
+      gHero={l:hr.left,t:hr.top+s0,w:hr.width,h:hr.height};}
+    const gr=gc.getBoundingClientRect();
+    /* strip the eased scroll transform we apply, to get the untransformed doc pos */
+    gCan={l:gr.left,t:gr.top+s0-sy*0.30};
+  }
+  function buildGlobeSprites(){
+    const w=gc.width/gD,h=gc.height/gD;
+    const R=Math.min(w,h)*0.36;
+    haloSpr=document.createElement("canvas");
+    const hs=Math.max(2,Math.round(R*2.36*gD));
+    haloSpr.width=hs;haloSpr.height=hs;
+    const hx=haloSpr.getContext("2d"),c=hs/2;
+    const hg=hx.createRadialGradient(c,c,R*0.92*gD,c,c,R*1.16*gD);
+    hg.addColorStop(0,"rgba(127,160,90,0)");hg.addColorStop(.55,"rgba(127,160,90,.085)");
+    hg.addColorStop(.8,"rgba(127,160,90,.03)");hg.addColorStop(1,"rgba(127,160,90,0)");
+    hx.fillStyle=hg;hx.beginPath();hx.arc(c,c,R*1.18*gD,0,6.2832);hx.fill();
+    /* text-mask sprite in unit-gradient space, blitted scaled to (rx,ry) per frame */
+    const pad=Math.max(10,gHero.w*0.05);
+    maskRx=(gHero.w+pad*2)*0.60;maskRy=(gHero.h+pad*2)*0.58;
+    maskSpr=document.createElement("canvas");
+    const mw=Math.max(2,Math.round(maskRx*2*gD)),mh=Math.max(2,Math.round(maskRy*2*gD));
+    maskSpr.width=mw;maskSpr.height=mh;
+    const mx=maskSpr.getContext("2d");
+    mx.translate(mw/2,mh/2);mx.scale(mw/2,mh/2);
+    const eg=mx.createRadialGradient(0,0,0.22,0,0,1);
+    eg.addColorStop(0,"rgba(0,0,0,1)");eg.addColorStop(.52,"rgba(0,0,0,.94)");
+    eg.addColorStop(.78,"rgba(0,0,0,.42)");eg.addColorStop(1,"rgba(0,0,0,0)");
+    mx.fillStyle=eg;mx.beginPath();mx.arc(0,0,1,0,6.2832);mx.fill();
+  }
+  function size(){const r=hero.getBoundingClientRect();
+    const dpr=devicePixelRatio;
+    dB=dpr*0.66;dF=dpr*0.5;gD=Math.min(dpr,1.5);
+    pc.width=r.width*dpr;pc.height=r.height*dpr;
+    pc.style.width=r.width+"px";pc.style.height=r.height+"px";
+    bc.width=Math.max(2,Math.round(r.width*dB));bc.height=Math.max(2,Math.round(r.height*dB));
+    bc.style.width=r.width+"px";bc.style.height=r.height+"px";
+    gc.width=Math.max(2,Math.round(gc.clientWidth*gD));gc.height=Math.max(2,Math.round(gc.clientHeight*gD));
+    gA=parseFloat(getComputedStyle(gc).getPropertyValue("--gA"))||.8;
+    globeDirty=true;gMaskSy=-1e9;
+    const tw=document.getElementById("treeWrap").getBoundingClientRect();
+    rc.width=tw.width*dpr;rc.height=tw.height*dpr;
+    rc.style.width=tw.width+"px";rc.style.height=tw.height+"px";
+    fc.width=Math.max(2,Math.round(fc.clientWidth*dF));fc.height=Math.max(2,Math.round(fc.clientHeight*dF));
+    cacheGlobeRects();buildGlobeSprites();cacheDocOffsets();
+    const n=Math.min(70,Math.floor(r.width/18));parts=[];
+    for(let i=0;i<n;i++)parts.push({x:Math.random()*r.width,y:Math.random()*r.height,
+      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.6+.8});
+    leaves=[];const nl=Math.min(16,Math.floor(r.width/90));
+    for(let i=0;i<nl;i++)leaves.push({x:Math.random()*r.width,y:Math.random()*r.height,
+      vy:.25+Math.random()*.4,rot:Math.random()*6.28,vr:(Math.random()-.5)*.03,
+      sz:2.5+Math.random()*3.5,ph:Math.random()*6.28,warm:Math.random()<.4});
+    birds=[];const nb=9;
+    for(let i=0;i<nb;i++)birds.push({x:Math.random()*r.width,y0:r.height*(.10+Math.random()*.16),
+      sp:.06+Math.random()*.09,ph:Math.random()*6.28,sz:1.6+Math.random()*1.8,wob:Math.random()*6.28});
+  }
+  size();addEventListener("resize",()=>{size();buildSpine();onScroll();paintOnce();});
+  hero.addEventListener("pointermove",e=>{const r=hero.getBoundingClientRect();
+    mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;
+    px=((e.clientX-r.left)/r.width-.5)*2;py=((e.clientY-r.top)/r.height-.5)*2;
+  });
+  hero.addEventListener("pointerleave",()=>{mouse.x=-9999;mouse.y=-9999;});
+  const cx=pc.getContext("2d"),gx=gc.getContext("2d"),bx=bc.getContext("2d"),
+        rx=rc.getContext("2d"),fx=fc.getContext("2d");
+  let rot=-0.18,tt=0,ttPrev=0,lastTick=0;
+  function drawParts(){
+    const w=pc.width/devicePixelRatio,h=pc.height/devicePixelRatio;
+    cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    cx.clearRect(0,0,w,h);
+    cx.globalAlpha=.55; /* former CSS opacity, baked into pixels */
+    for(const p of parts){
+      const dx=p.x-mouse.x,dy=p.y-mouse.y,dist=Math.hypot(dx,dy);
+      if(dist<150&&dist>0.01){const f=(150-dist)/150*0.9;p.x+=dx/dist*f;p.y+=dy/dist*f;}
+      p.x+=p.vx+wind*0.25;p.y+=p.vy;
+      if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;
+      p.x=(p.x+w)%w;
+    }
+    cx.lineWidth=1;
+    for(let i=0;i<parts.length;i++)for(let j=i+1;j<parts.length;j++){
+      const a=parts[i],b=parts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<118){cx.strokeStyle=`rgba(127,160,90,${(1-d/118)*.22})`;
+        cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();}
+    }
+    for(const p of parts){cx.fillStyle="rgba(200,160,120,.55)";
+      cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill();}
+    /* falling leaves / spores, pushed by wind */
+    for(const L of leaves){
+      L.y+=L.vy;L.rot+=L.vr;L.x+=Math.sin(tt/900+L.ph)*.35+wind*1.1;
+      if(L.y>h+8){L.y=-8;L.x=Math.random()*w;}
+      if(L.x>w+10)L.x=-10;if(L.x<-10)L.x=w+10;
+      cx.save();cx.translate(L.x,L.y);cx.rotate(L.rot+wind*.4);
+      cx.fillStyle=L.warm?"rgba(168,124,84,.4)":"rgba(127,160,90,.38)";
+      cx.beginPath();cx.ellipse(0,0,L.sz,L.sz*.45,0,0,7);cx.fill();cx.restore();
+    }
+    cx.globalAlpha=1;
+  }
+  function drawBirds(){
+    const w=bc.width/dB,h=bc.height/dB;
+    bx.setTransform(dB,0,0,dB,0,0);
+    bx.clearRect(0,0,w,h);
+    bx.globalAlpha=.56; /* former CSS opacity, baked into pixels */
+    bx.lineCap="round"; /* softness comes from the sub-dpr backing store, not a blur */
+    for(const b of birds){
+      b.x+=b.sp+wind*.12;
+      if(b.x>w+16){b.x=-16;b.y0=h*(.10+Math.random()*.16);}
+      const y=b.y0+Math.sin(tt/2600+b.wob)*6+Math.sin(tt/900+b.ph)*1.2;
+      const up=Math.sin(tt/210+b.ph);
+      const flap=up>0?up*0.9:up*0.35+Math.sin(tt/105+b.ph*2)*0.12;
+      bx.strokeStyle=`rgba(58,68,58,${(0.30-b.sz*0.04).toFixed(3)})`;
+      bx.lineWidth=Math.max(0.7,b.sz*0.32);
+      bx.beginPath();
+      bx.moveTo(b.x-b.sz,y);
+      bx.quadraticCurveTo(b.x-b.sz*.5,y-b.sz*flap,b.x,y-b.sz*0.28);
+      bx.quadraticCurveTo(b.x+b.sz*.5,y-b.sz*flap,b.x+b.sz,y);
+      bx.stroke();
+    }
+    bx.globalAlpha=1;
+  }
+  /* tapered organic strand: 4 pts, width & alpha fall off toward the tip */
+  function strand(ctx,pts,w0,col){
+    for(let s=0;s<pts.length-1;s++){
+      const t=s/(pts.length-1);
+      ctx.strokeStyle=col.replace("A",(0.42-0.42*t).toFixed(2));
+      ctx.lineWidth=w0*(1-0.75*t);
+      ctx.beginPath();ctx.moveTo(pts[s][0],pts[s][1]);ctx.lineTo(pts[s+1][0],pts[s+1][1]);ctx.stroke();
+    }
+  }
+  function drawRoots(){
+    const w=rc.width/devicePixelRatio,h=rc.height/devicePixelRatio;
+    rx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    rx.clearRect(0,0,w,h);
+    rx.lineCap="round";
+    const N=5;
+    for(let i=0;i<N;i++){
+      const f=i/(N-1);
+      const ax=w*(0.46+0.030*i);        /* tight curtain over the trunk only */
+      const ay=h*(0.40+Math.sin(f*5)*0.015);   /* anchored under the canopy */
+      const len=h*(0.16+0.05*Math.abs(Math.sin(f*7+1)));  /* tip lands on the moss */
+      const bow=(i%2?1:-1)*(2+(i%3)*1.5);
+      const lag=whist[Math.max(0,whist.length-1-i*2)]||0;
+      const sway=lag*(8+f*10)+Math.sin(tt/700+i)*1.1;
+      strand(rx,[[ax,ay],
+        [ax+bow*.5+sway*.3,ay+len*.4],
+        [ax+bow+sway*.7,ay+len*.75],
+        [ax+bow*1.2+sway,ay+len]],2.0,"rgba(110,114,94,A)");
+    }
+  }
+  function drawFgRoots(){
+    const w=fc.width/dF,h=fc.height/dF;
+    fx.setTransform(dF,0,0,dF,0,0);
+    fx.clearRect(0,0,w,h);
+    fx.globalAlpha=.65; /* former CSS filter+opacity, baked */
+    fx.lineCap="round"; /* soft focus comes from the half-res backing store */
+    const N=5;
+    for(let i=0;i<N;i++){
+      const f=i/(N-1);
+      const ax=w*(0.45+0.45*f);
+      const ay=h*(0.40+Math.sin(f*5)*0.06);
+      const len=h*(0.30+0.25*Math.abs(Math.sin(f*9+1)));
+      const bow=(i%2?1:-1)*(8+(i%3)*6);
+      const lag=whist[Math.max(0,whist.length-1-i*3)]||0;
+      const sway=lag*(18+f*22)+Math.sin(tt/800+i*2)*2.6;
+      strand(fx,[[ax,ay],
+        [ax+bow*.5+sway*.25,ay+len*.35],
+        [ax+bow+sway*.6,ay+len*.7],
+        [ax+bow*1.3+sway,ay+len]],5,"rgba(46,58,38,A)");
+    }
+    fx.globalAlpha=1;
+  }
+  let LAND=null;
+  function getLand(){if(LAND)return LAND;const b=atob(LAND_B64);LAND=new Uint8Array(b.length);for(let i=0;i<b.length;i++)LAND[i]=b.charCodeAt(i);return LAND;}
+  /* Rotation-independent unit vectors of the two dot grids, built once on first
+     paint. The sphere's shape never changes — only `rot` moves it — so re-scanning
+     the 1° land bitmask (64,800 cells) and re-running sin/cos for the 3° ocean grid
+     every repaint was burning most of the frame budget. Precomputing both grids is
+     what lets the globe repaint on every frame instead of every few. */
+  let CONT=null,OCEA=null;
+  function buildSphereCells(){
+    const L=getLand();
+    const cLat=new Float64Array(180),sLat=new Float64Array(180);
+    for(let r=0;r<180;r++){const la=(90-(r+0.5))*Math.PI/180;sLat[r]=Math.sin(la);cLat[r]=Math.cos(la);}
+    const cLon=new Float64Array(360),sLon=new Float64Array(360);
+    for(let c=0;c<360;c++){const lo=(-180+(c+0.5))*Math.PI/180;cLon[c]=Math.cos(lo);sLon[c]=Math.sin(lo);}
+    const ct=[],ot=[];
+    for(let r=0;r<180;r++){
+      const ca=cLat[r],y=sLat[r];
+      for(let c=0;c<360;c++){
+        const idx=r*360+c;
+        const x=ca*cLon[c],z=ca*sLon[c];
+        /* polar caps skipped on purpose: at |lat|>~60° the 1° land grid compresses
+           Antarctica into a dark lens on the lower limb and the 3° ocean grid
+           stacks into concentric rings around the pole — both read as stray
+           circles overlapping the sphere */
+        if(r>=150)continue;
+        if((L[idx>>3]>>(7-(idx&7)))&1){
+          /* the 55-78°N land band (Siberia/Canada/Scandinavia) is near-continuous,
+             so foreshortened at the top limb it collapses into stacked concentric
+             arcs that read as stray circles over the sphere. Dither-thin those rows
+             with a stable hash so the band dissolves into fading speckle instead,
+             and drop the innermost cap where rows collapse to a point. */
+          if(r<12)continue;
+          if(r<34){const h=(((r*73856093)^(c*19349663))>>>0)/4294967296;if(h>Math.pow(r/34,1.6))continue;}
+          ct.push(x,y,z);
+        }
+        else if(r%3===1&&c%3===0&&r>26)ot.push(x,y,z); /* same 3° sampling as the old ocean loop, minus polar rings */
+      }
+    }
+    /* Float64 (not 32): the hoisted values must be bit-identical to the doubles
+       the per-frame scan used to compute, or a dot could flip cull/bucket */
+    CONT=new Float64Array(ct);OCEA=new Float64Array(ot);
+  }
+  /* terra-globe-style shading: precomputed light(5) x depth(4) palette buckets.
+     Lit face = deep ink-green & opaque; shadow limb = pale sage & faint. */
+  const GT=5,GF=4,GPAL=[];
+  (function(){
+    const SH=[134,152,116],LT=[34,50,28];
+    for(let ti=0;ti<GT;ti++){
+      const k=ti/(GT-1);
+      const r=Math.round(SH[0]+(LT[0]-SH[0])*k),g=Math.round(SH[1]+(LT[1]-SH[1])*k),b=Math.round(SH[2]+(LT[2]-SH[2])*k);
+      for(let fi=0;fi<GF;fi++)GPAL.push(`rgba(${r},${g},${b},${(0.30+0.60*(fi/(GF-1))).toFixed(2)})`);
+    }
+  })();
+  /* Globe draws straight onto the visible canvas and repaints on every frame the
+     sphere actually moved, so the dots stay glued to the rotation instead of
+     crawling in visible steps. The epsilon below is not a frame-rate cap — at
+     0.192 rad/s even a 360Hz panel moves far more than that per frame — it only
+     stops us redrawing identical pixels while the spin is frozen (reduced motion,
+     hidden tab). */
+  function drawGlobe(){
+    /* time-normalised spin: 0.0032 rad per 16.667ms = 0.192 rad/s, one turn in
+       ~33s. That is v5's flat `rot+=0.0016` per frame as it actually ran on a
+       120Hz panel — v6 halved it and then throttled repaints on top, which is
+       the "too slow, and it stutters" report. Normalising by dt keeps the same
+       perceived speed on 60/90/120Hz and through frame hiccups. */
+    if(!RM){const dt=Math.min(50,Math.max(1,tt-ttPrev));rot+=0.0032*dt/16.667;}
+    ttPrev=tt;
+    if(!globeDirty&&Math.abs(rot-lastRot)<0.0004)return;
+    globeDirty=false;lastRot=rot;
+    if(!CONT)buildSphereCells();
+    const w=gc.width/gD,h=gc.height/gD;
+    gx.setTransform(gD,0,0,gD,0,0);
+    gx.clearRect(0,0,w,h);
+    const R=Math.min(w,h)*0.36,cx0=w/2,cy0=h/2;
+    const tilt=0.20,ct=Math.cos(tilt),st=Math.sin(tilt),cr=Math.cos(rot),sr=Math.sin(rot);
+    /* atmospheric halo: pre-rendered sprite blitted, not a per-frame gradient fill */
+    if(haloSpr){gx.globalAlpha=gA;
+      gx.drawImage(haloSpr,cx0-R*1.18,cy0-R*1.18,R*2.36,R*2.36);}
+    /* limb */
+    gx.strokeStyle="rgba(127,160,90,.20)";gx.lineWidth=1;
+    gx.beginPath();gx.arc(cx0,cy0,R,0,6.2832);gx.stroke();
+    /* fixed key light from upper-left-front, screen space (terra-globe look) */
+    const LX=-0.48,LY=0.52,LZ=0.70;
+    const base=Math.max(1.6,Math.min(3.4,R/110));
+    /* ocean: sparse 3°-sampled whisper-faint dots give the sphere its volume
+       without competing with the hero type */
+    gx.fillStyle="rgba(56,78,50,.075)";
+    const so=Math.max(1.1,base*0.5),soh=so/2;
+    for(let i=0,n=OCEA.length;i<n;i+=3){
+      const x=OCEA[i],y=OCEA[i+1],z=OCEA[i+2];
+      const x2=x*cr-z*sr,zr=x*sr+z*cr;
+      const y2=y*ct-zr*st,z2=y*st+zr*ct;
+      if(z2<=0.10)continue;
+      gx.fillRect(cx0+x2*R-soh,cy0-y2*R-soh,so,so);
+    }
+    /* continents: 1° dot grid, light(5) x depth(4) palette buckets. fillStyle is
+       only reassigned when the bucket changes — still one fillRect per dot, so the
+       compositing (and every overlapping dot near the limb) is unchanged. */
+    let lb=-1;
+    for(let i=0,n=CONT.length;i<n;i+=3){
+      const x=CONT[i],y=CONT[i+1],z=CONT[i+2];
+      const x2=x*cr-z*sr,zr=x*sr+z*cr;
+      const y2=y*ct-zr*st,z2=y*st+zr*ct;
+      if(z2<=0.03)continue;
+      const sxp=cx0+x2*R,syp=cy0-y2*R;
+      let lt=(x2*LX+y2*LY+z2*LZ+1)*0.5;   /* 0 shadow limb … 1 lit face */
+      lt=lt*lt*(3-2*lt);                    /* smoothstep the terminator */
+      lt=0.25+0.75*lt;                      /* keep the dark side readable on paper */
+      const f=(z2-0.03)/0.97;
+      const b=((lt*(GT-1)+0.5)|0)*GF+((f*(GF-1)+0.5)|0);
+      const s=base*(0.78+0.5*z2),sh=s/2;
+      if(b!==lb){gx.fillStyle=GPAL[b];lb=b;}
+      gx.fillRect(sxp-sh,syp-sh,s,s);
+    }
+    /* erase a soft elliptical hole through the dots wherever they cross the hero
+       text, so globe points fade out naturally behind the type instead of sitting
+       on top of it. Replaces the old paper-colour wash. */
+    /* text-mask position from cached doc-space rects + the eased scroll value:
+       no getBoundingClientRect here, so no sync layout mid-frame */
+    const gy=gCan.t+sy*0.30;
+    const mcx=gHero.l+gHero.w/2-gCan.l,mcy=gHero.t+gHero.h/2-gy;
+    if(maskSpr&&maskRx>4&&maskRy>4){
+      gx.save();
+      gx.globalAlpha=1;
+      gx.globalCompositeOperation="destination-out";
+      gx.drawImage(maskSpr,mcx-maskRx,mcy-maskRy,maskRx*2,maskRy*2);
+      gx.restore();
+    }
+    gx.globalAlpha=1;
+  }
+  function loop(ts){
+    if(window.__freeze)return;
+    tt=ts;lastTick=ts;syT=window.scrollY;sy+=(syT-sy)*.09;
+    /* wind: constant micro-breeze only, soft spring so the crown breathes not jerks */
+    const breeze=Math.sin(ts/2600)*0.30+Math.sin(ts/1650+1.7)*0.14+Math.sin(ts/9300+0.6)*0.10;
+    windV+=(breeze-wind)*0.045;windV*=0.92;wind+=windV;
+    /* pointer parallax: heavy lerp so depth layers drift toward the cursor */
+    lx+=(px-lx)*0.022;ly+=(py-ly)*0.022;
+    whist.push(wind);if(whist.length>40)whist.shift();
+    /* all five canvases live inside the hero: past it, skip every redraw and every
+       hero-layer write — this is what keeps long scrolls below the fold cheap */
+    const heroVis=syT<innerHeight*1.25;
+    if(heroVis){drawParts();drawGlobe();drawBirds();drawRoots();drawFgRoots();}
+    const wide=innerWidth>=900;
+    if(wide){
+      /* doc-space offsets cached on resize: zero getBoundingClientRect per frame,
+         so our style writes never trigger a sync layout mid-frame */
+      const abTop=abDocTop-sy;
+      const shdP=shdDocMid.map(d=>(d-sy-innerHeight/2)/innerHeight);
+      const br=Math.sin(ts/1500)*0.006;
+      const tw=EL.treeWrap;
+      if(tw&&heroVis)tw.style.transform=
+        `translate3d(${(lx*-7).toFixed(1)}px,${(sy*0.25+ly*-5).toFixed(1)}px,0) scale(${(1+br).toFixed(4)})`;
+      /* globe drifts at 30% of scroll speed: it lingers as background depth
+         while the page itself still scrolls 1:1 (no pinning) */
+      const gc=EL.globeCv;
+      if(gc&&heroVis)gc.style.transform=`translate3d(0,${(sy*0.30).toFixed(1)}px,0)`;
+      const wMid=whist[Math.max(0,whist.length-10)]||0;
+      const cp=EL.islandCanopy;
+      if(cp&&heroVis)cp.style.transform=`rotate(${(wind*0.85).toFixed(2)}deg) skewX(${(wind*0.45).toFixed(2)}deg) translateX(${(wind*3).toFixed(1)}px)`;
+      const cm=EL.islandMid;
+      if(cm&&heroVis)cm.style.transform=`rotate(${(wMid*0.40).toFixed(2)}deg) skewX(${(wMid*0.22).toFixed(2)}deg) translateX(${(wMid*1.6).toFixed(1)}px)`;
+      const fg=EL.fgBranch;
+      if(fg&&heroVis)fg.style.transform=`translate3d(${(lx*16+wind*-4).toFixed(1)}px,${(sy*0.16+ly*10).toFixed(1)}px,0) rotate(${(wind*-0.5).toFixed(2)}deg)`;
+      /* grid parallax as a compositor transform on the clipped pseudo-layer,
+         not a backgroundPosition repaint of the whole section */
+      const ag=EL.abGrid;
+      if(ag)ag.style.setProperty("--gy",(-abTop*0.05).toFixed(1)+"px");
+      shdEls.forEach((el,i)=>{el.style.transform=`translateY(${(shdP[i]*-14).toFixed(1)}px)`;});
+    }
+    if(syT!==lastNavSy){lastNavSy=syT;onScroll();}
+    requestAnimationFrame(loop);
+  }
+  /* Synchronous first paint + timer fallback. requestAnimationFrame is main-thread
+     and is fully paused in occluded webviews / background tabs (the embedded HTML
+     preview is one), while compositor-driven CSS fog keeps moving — the page then
+     shows mist but five blank canvases, i.e. "the globe vanished". Paint one frame
+     at boot so the first paint already carries globe/birds/roots, and repaint from
+     a timer whenever rAF has been silent for over half a second. */
+  function paintOnce(){
+    tt=performance.now();lastTick=tt;syT=window.scrollY;
+    if(syT<innerHeight*1.25){drawParts();drawGlobe();drawBirds();drawRoots();drawFgRoots();}
+  }
+  paintOnce();
+  setInterval(()=>{if(window.__freeze)return;
+    if(performance.now()-lastTick>500)paintOnce();},700);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)paintOnce();});
+  if(RM){wind=0;whist=[0];
+    const still=()=>{if(window.__freeze)return;lastTick=performance.now();syT=window.scrollY;
+      if(syT<innerHeight*1.25){drawParts();drawGlobe();drawBirds();drawRoots();drawFgRoots();}
+      if(syT!==lastNavSy){lastNavSy=syT;onScroll();}requestAnimationFrame(still);};
+    still();}
+  else requestAnimationFrame(loop);
+}
+
+/* ---------- reveal & count ---------- */
+let io;
+function countUp(root){
+  root.querySelectorAll("[data-cnt]").forEach(cnt=>{
+    const target=+cnt.dataset.cnt;let c=0;const step=Math.max(1,Math.round(target/28));
+    const iv=setInterval(()=>{c+=step;if(c>=target){c=target;clearInterval(iv);}cnt.textContent=c;},34);});
+}
+function observe(){
+  if(io)io.disconnect();
+  io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");
+    countUp(e.target);
+    io.unobserve(e.target);}}),{threshold:.14});
+  document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+  const na=e.target.closest("#nav a[data-sec]");
+  if(na){const sec=document.getElementById(na.dataset.sec),v=document.getElementById("veil");
+    if(sec&&v){v.style.background=sec.classList.contains("on-paper")?"rgba(243,237,226,.5)":"rgba(15,22,16,.5)";
+      v.style.opacity="1";setTimeout(()=>{v.style.opacity="0";},320);}
+  }
+  const tab=e.target.closest("[data-tab]");if(tab){pubTab=+tab.dataset.tab;pubYear="all";renderTabs();renderPubs();observe();return;}
+  const yc=e.target.closest("[data-year]");if(yc){pubYear=yc.dataset.year;renderTabs();renderPubs();observe();return;}
+  const lg=e.target.closest(".lang button");if(lg){setLang(lg.dataset.lang);return;}
+  const mc=e.target.closest(".mchip");if(mc){const p=mc.dataset.m.split(":");const ch=MEM[p[0]][+p[1]];const m=ch.list[+p[2]];
+    openModal(personModalData(Object.assign({grp:p[0],cohort:ch.y},m),false),p[0]==="ms"?"b":"g");return;}
+  if(e.target.closest("#supCard")){openModal(personModalData(SUP,true),"g");return;}
+  const more=e.target.closest(".ncard .more");if(more){const card=more.closest(".ncard");
+    card.classList.toggle("open");more.textContent=card.classList.contains("open")?t().less+" ↑":t().moreN+" ↓";return;}
+  const ext=e.target.closest(".ncard.ext");if(ext&&!more){window.open(NEWS[+ext.dataset.n].wx,"_blank");return;}
+  const f=e.target.closest("#schips button");if(f){sFilter=f.dataset.f;openSearch();runSearch();return;}
+  const si=e.target.closest(".sitem");if(si){const it=sResults[+si.dataset.i];closeSearch();it.act();return;}
+});
+document.getElementById("sOpen").addEventListener("click",openSearch);
+document.getElementById("mClose").addEventListener("click",closeModal);
+document.getElementById("mov").addEventListener("click",e=>{if(e.target.id==="mov")closeModal();});
+document.getElementById("sov").addEventListener("click",e=>{if(e.target.id==="sov")closeSearch();});
+document.getElementById("sin").addEventListener("input",runSearch);
+function legacyCopy(s){const ta=document.createElement("textarea");ta.value=s;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(e){}ta.remove();}
+document.getElementById("fBtn").addEventListener("click",()=>{
+  if(IN_WX){location.href=WX_HOME;return;}
+  const flash=()=>{const m=document.getElementById("fMsg");m.textContent=t().followCopied;m.classList.add("on");clearTimeout(m._t);m._t=setTimeout(()=>m.classList.remove("on"),3600);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(UI.zh.followName).then(flash).catch(()=>{legacyCopy(UI.zh.followName);flash();});}
+  else{legacyCopy(UI.zh.followName);flash();}
+});
+addEventListener("keydown",e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openSearch();return;}
+  if(e.key==="Escape"){closeLogoZoom();closeSearch();closeModal();return;}
+  if(document.getElementById("sov").classList.contains("open")){
+    if(e.key==="ArrowDown"){e.preventDefault();sAct=Math.min(sResults.length-1,sAct+1);drawSearch(document.getElementById("sin").value.trim().toLowerCase());}
+    if(e.key==="ArrowUp"){e.preventDefault();sAct=Math.max(0,sAct-1);drawSearch(document.getElementById("sin").value.trim().toLowerCase());}
+    if(e.key==="Enter"&&sResults[sAct]){closeSearch();sResults[sAct].act();}
+  }});
+/* logo zoom lightbox */
+function closeLogoZoom(){document.getElementById("logoZoom").classList.remove("on");}
+document.getElementById("logoBtn").addEventListener("click",()=>{document.getElementById("logoZoom").classList.add("on");});
+document.getElementById("lzClose").addEventListener("click",closeLogoZoom);
+document.getElementById("logoZoom").addEventListener("click",e=>{if(e.target.id==="logoZoom")closeLogoZoom();});
+function setLang(l){LANG=l;
+  document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.lang===l));
+  renderAll();
+  if(window.__cacheDoc)window.__cacheDoc();}
+addEventListener("load",()=>{if(window.__cacheDoc)window.__cacheDoc();});
+
+/* ---------- boot ---------- */
+document.getElementById("logoSm").src="data:image/webp;base64,"+LOGO_B64;
+document.getElementById("logoFt").src="data:image/webp;base64,"+LOGO_B64;
+document.getElementById("logoBig").src="data:image/webp;base64,"+LOGO_B64;
+const ISLE_SRC="data:image/webp;base64,"+ISLAND_B64;
+["islandBase","islandMid","islandCanopy"].forEach(id=>{document.getElementById(id).src=ISLE_SRC;});
+document.getElementById("fgBranch").src="data:image/webp;base64,"+BRANCH_B64;
+document.getElementById("islandBase").onload=()=>{buildSpine();};
+renderAll();
+(function(){
+  const gate=document.getElementById("gate");
+  document.getElementById("logoGate").src="data:image/webp;base64,"+LOGO_B64;
+  const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let flying=false;
+  function fly(l){
+    if(flying)return; flying=true;
+    setLang(l);
+    try{localStorage.setItem("ctr_lang",l);}catch(e){}
+    const seal=gate.querySelector(".gate-seal");
+    const btn=document.getElementById("logoBtn");
+    const s=seal.getBoundingClientRect(), t=btn.getBoundingClientRect();
+    const dx=(t.left+t.width/2)-(s.left+s.width/2);
+    const dy=(t.top+t.height/2)-(s.top+s.height/2);
+    const sc=t.width/s.width;
+    const done=()=>{gate.style.visibility="hidden";gate.style.pointerEvents="none";};
+    if(RM){gate.classList.add("gate-fly");done();return;}
+    seal.style.position="fixed";seal.style.margin="0";
+    seal.style.left=s.left+"px";seal.style.top=s.top+"px";
+    seal.style.width=s.width+"px";seal.style.height=s.height+"px";
+    gate.appendChild(seal);
+    gate.classList.add("gate-fly");
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      seal.style.transform="translate("+dx+"px,"+dy+"px) scale("+sc+")";
+    }));
+    seal.addEventListener("transitionend",e=>{if(e.propertyName==="transform")done();},{once:true});
+    setTimeout(done,1500);
+  }
+  gate.addEventListener("click",e=>{const b=e.target.closest("[data-glang]");if(b)fly(b.dataset.glang);});
+  addEventListener("keydown",e=>{if(e.key==="Escape"&&!flying)fly("zh");});
+})();
+initCanvas();
+addEventListener("load",()=>{buildSpine();observe();});
+</script>
+</body>
+</html>

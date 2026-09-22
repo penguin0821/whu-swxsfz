@@ -1,0 +1,63 @@
+import io,sys
+p='demo2_template.html'
+s=io.open(p,encoding='utf-8').read()
+pairs=[
+(".kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;",
+ ".kicker{font-size:12.5px;letter-spacing:.1em;"),
+(".hd .nm span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;",
+ ".hd .nm span{font-family:var(--serif);font-size:10px;letter-spacing:.16em;"),
+(".lang button{font-family:var(--mono);font-size:12px;",
+ ".lang button{font-size:12.5px;"),
+(".dir .ix{font-family:var(--mono);font-size:11px;letter-spacing:.2em;",
+ ".dir .ix{font-family:var(--serif);font-size:12.5px;letter-spacing:.12em;"),
+(".dir .kw i{font-style:normal;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;",
+ ".dir .kw i{font-style:normal;font-size:11px;letter-spacing:.02em;"),
+(".sup .role{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;",
+ ".sup .role{font-size:12px;letter-spacing:.08em;"),
+(".sup .hon{font-family:var(--mono);font-size:11px;",
+ ".sup .hon{font-size:11.5px;"),
+(".sup .more{font-family:var(--mono);font-size:11px;letter-spacing:.14em;",
+ ".sup .more{font-size:12px;letter-spacing:.04em;"),
+(".grp .gh .c{font-family:var(--mono);font-size:12px;",
+ ".grp .gh .c{font-family:var(--serif);font-size:12.5px;"),
+("right:18px;font-family:var(--mono);font-size:10.5px;",
+ "right:18px;font-family:var(--serif);font-size:11px;"),
+(".ychips button{border:0;background:none;font-family:var(--mono);font-size:12px;",
+ ".ychips button{border:0;background:none;font-family:var(--serif);font-size:12.5px;"),
+(".pub .no{font-family:var(--mono);font-size:12px;",
+ ".pub .no{font-family:var(--serif);font-size:12.5px;"),
+(".pub .rchip{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;",
+ ".pub .rchip{display:inline-block;font-size:11.5px;letter-spacing:.02em;"),
+(".pub .venue{margin-left:auto;font-family:var(--mono);font-size:11.5px;",
+ ".pub .venue{margin-left:auto;font-size:11.5px;"),
+(".ncard .dt{font-family:var(--mono);font-size:12px;",
+ ".ncard .dt{font-family:var(--serif);font-size:12.5px;"),
+("gap:6px;font-family:var(--mono);font-size:10.5px;color:#0B7A4B;",
+ "gap:6px;font-size:11px;color:#0B7A4B;"),
+(".cnonly{font-family:var(--mono);font-size:10.5px;",
+ ".cnonly{font-size:11px;"),
+(".ncard .more{font-family:var(--mono);font-size:11px;letter-spacing:.12em;",
+ ".ncard .more{font-size:11.5px;letter-spacing:.04em;"),
+(".ft .mail{font-family:var(--mono);font-size:12.5px;",
+ ".ft .mail{font-family:var(--serif);font-size:13px;"),
+("padding-top:26px;font-family:var(--mono);font-size:11px;letter-spacing:.06em}",
+ "padding-top:26px;font-size:11.5px;letter-spacing:.02em}"),
+(".sgrp{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;",
+ ".sgrp{font-size:11px;letter-spacing:.1em;"),
+(".sitem .ty{font-family:var(--mono);font-size:10px;color:var(--green);flex:0 0 44px;letter-spacing:.08em}",
+ ".sitem .ty{font-size:10.5px;color:var(--green);flex:0 0 44px;letter-spacing:.04em}"),
+("border-top:1px solid var(--line-d);font-family:var(--mono);font-size:10.5px;color:var(--pink-mut);display:flex;gap:18px}",
+ "border-top:1px solid var(--line-d);font-size:11px;color:var(--pink-mut);display:flex;gap:18px}"),
+(".dlg .role{font-family:var(--mono);font-size:11px;letter-spacing:.14em;",
+ ".dlg .role{font-size:11.5px;letter-spacing:.06em;"),
+(".dlg .sec h5{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;",
+ ".dlg .sec h5{font-size:11px;letter-spacing:.1em;"),
+(".dlg .mail{font-family:var(--mono);font-size:12.5px;",
+ ".dlg .mail{font-family:var(--serif);font-size:13px;"),
+]
+for old,new in pairs:
+    n=s.count(old)
+    assert n==1, (n, old[:60])
+    s=s.replace(old,new)
+io.open(p,'w',encoding='utf-8').write(s)
+print("retyped", len(pairs), "selectors; mono left:", s.count("var(--mono)"))

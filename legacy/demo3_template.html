@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>涉外刑事风险治理与合规中心 · Demo v3</title>
+<style>
+/* ============ tokens ============ */
+:root{
+  --stage:#141C12; --stage-2:#18221A; --stage-3:#0F1610;
+  --paper:#F3EDE2; --paper-2:#FBF7EF;
+  --ink:#221D15; --ink-mut:#6E6558;
+  --pink:#F3EDE2; --pink-mut:rgba(243,237,226,.66);
+  --green:#7FA05A; --green-deep:#3E5B26; --green-soft:rgba(127,160,90,.16);
+  --brown:#A9714B; --brown-deep:#8A5A3B; --brown-soft:rgba(169,113,75,.14);
+  --line-d:rgba(243,237,226,.14); --line-p:rgba(34,29,21,.14);
+  --serif:Georgia,"Songti SC","STSong","Noto Serif SC",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 10px 30px rgba(20,28,18,.08);
+  --gut:72px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--stage);color:var(--pink);-webkit-font-smoothing:antialiased}
+::selection{background:var(--green);color:#fff}
+button{font-family:inherit;cursor:pointer}
+img{user-select:none}
+#page{position:relative}
+#spineSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+#spineSvg .root,#spineSvg .main{fill:none;stroke-linecap:round}
+#spineSvg .root{stroke:rgba(243,237,226,.34);stroke-width:1.6}
+#spineSvg .main{stroke:rgba(138,90,59,.55);stroke-width:1.6}
+#spineSvg .branch{fill:none;stroke:rgba(138,90,59,.4);stroke-width:1.2;stroke-dasharray:4 5;opacity:0;transition:opacity .9s ease}
+#spineSvg .branch.on{opacity:1}
+#spineSvg .node{fill:var(--paper);stroke:var(--brown-deep);stroke-width:1.4;opacity:0;transform:scale(.4);transform-origin:center;transform-box:fill-box;transition:opacity .5s ease,transform .5s cubic-bezier(.2,.9,.3,1.4)}
+#spineSvg .node.on{opacity:1;transform:scale(1)}
+#spineSvg .ndot{fill:var(--brown-deep);opacity:0;transition:opacity .5s}
+#spineSvg .ndot.on{opacity:1}
+main{position:relative;z-index:1}
+header,footer{position:relative;z-index:2}
+.wrap{max-width:1240px;margin:0 auto;padding:0 56px 0 106px}
+.kicker{font-size:12.5px;letter-spacing:.1em;color:var(--green)}
+.on-paper .kicker{color:var(--green-deep)}
+h1,h2,h3,.serif{font-family:var(--serif)}
+h2{font-size:clamp(26px,3.2vw,40px);line-height:1.25;margin:14px 0 10px;font-weight:600}
+.sub{font-size:15.5px;line-height:1.8;color:var(--pink-mut);max-width:52ch}
+.on-paper{background:var(--paper);color:var(--ink)}
+.on-paper .sub{color:var(--ink-mut)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease var(--d,0s),transform .8s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+
+/* ============ header ============ */
+header{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:60;width:min(1160px,calc(100% - 28px));border-radius:999px;border:1px solid var(--line-d);background:rgba(15,22,16,.68);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 14px 44px rgba(0,0,0,.30)}
+.hd{display:flex;align-items:center;gap:14px;height:58px;padding:0 10px 0 16px}
+.hd img{width:38px;height:38px;border-radius:50%;background:var(--paper)}
+.hd .nm{line-height:1.3;margin-right:auto}
+.hd .nm b{font-family:var(--serif);font-size:15px;font-weight:600;display:block;color:var(--pink)}
+.hd .nm span{font-family:var(--serif);font-size:10px;letter-spacing:.16em;color:var(--pink-mut);text-transform:uppercase}
+nav{display:flex;gap:2px}
+nav a{font-size:13.5px;color:var(--pink-mut);text-decoration:none;padding:7px 12px;border-radius:8px;transition:color .2s,background .2s}
+nav a:hover{color:var(--pink);background:rgba(243,237,226,.08)}
+nav a.on{color:#CFE3B4;background:var(--green-soft)}
+.sbtn{display:flex;align-items:center;gap:8px;border:1px solid var(--line-d);background:rgba(243,237,226,.05);color:var(--pink-mut);border-radius:999px;padding:7px 12px;font-size:12.5px;transition:all .2s}
+.sbtn:hover{color:var(--pink);border-color:rgba(243,237,226,.3)}
+.sbtn kbd{font-family:var(--mono);font-size:10px;border:1px solid var(--line-d);border-radius:4px;padding:1px 5px;color:var(--pink-mut)}
+.lang{display:flex;border:1px solid var(--line-d);border-radius:999px;padding:3px;background:rgba(243,237,226,.05)}
+.lang button{font-size:12.5px;border:0;background:none;color:var(--pink-mut);padding:4px 11px;border-radius:999px;transition:all .2s}
+.lang button.on{background:var(--green);color:#12200E}
+/* ============ language gate ============ */
+#gate{position:fixed;inset:0;z-index:120;background:var(--paper);display:flex;align-items:center;justify-content:center;transition:opacity .65s ease,visibility .65s}
+#gate.off{opacity:0;visibility:hidden;pointer-events:none}
+.gate-in{text-align:center;padding:24px;transform:translateY(-2vh)}
+.gate-in img{width:54px;height:54px;border-radius:50%;margin-bottom:28px;box-shadow:0 10px 30px rgba(34,29,21,.14)}
+.gq-zh{font-family:var(--serif);font-size:clamp(26px,3.6vw,42px);letter-spacing:-.01em;color:var(--ink);font-weight:400}
+.gq-en{font-size:13px;color:var(--ink-mut);margin-top:12px;letter-spacing:.02em}
+.gpills{display:flex;gap:12px;justify-content:center;margin-top:36px}
+.gpills button{font-size:14px;border:1px solid var(--line-p);background:none;color:var(--ink);border-radius:999px;padding:11px 32px;transition:all .25s}
+.gpills button:hover{background:var(--green-deep);border-color:var(--green-deep);color:var(--paper)}
+@media(max-width:900px){nav{display:none}.hd{height:auto;padding:10px 18px}.hd .nm span{display:none}.wrap{padding:0 22px 0 52px}:root{--gut:28px}header{top:10px;width:calc(100% - 20px)}}
+
+/* ============ chapter hud ============ */
+#hud{position:fixed;left:26px;top:50%;transform:translateY(-50%);z-index:40;display:flex;align-items:center;gap:10px;color:rgba(243,237,226,.55);font-size:11px;letter-spacing:.08em;pointer-events:none;transition:color .4s}
+#hud .hud-lines{display:flex;flex-direction:column;gap:3px}
+#hud .hud-lines i{display:block;height:1px;background:currentColor;opacity:.55}
+#hud .hud-lines i:nth-child(1){width:26px}
+#hud .hud-lines i:nth-child(2){width:17px}
+#hud .hud-lines i:nth-child(3){width:9px}
+#hud .hud-no{font-family:var(--serif);font-size:13.5px;color:var(--pink)}
+#hud .hud-sl{opacity:.5}
+#hud.on-paper{color:rgba(34,29,21,.5)}
+#hud.on-paper .hud-no{color:var(--ink)}
+@media(max-width:1299px){#hud{display:none}}
+/* ============ carousel controls ============ */
+.grp .gh .gp{font-family:var(--serif);font-size:12px;color:var(--ink-mut);display:inline-flex;gap:6px;align-items:baseline;margin-left:16px}
+.grp .gh .gp b{color:var(--ink);font-weight:600;border-bottom:1px solid var(--brown-deep);padding-bottom:2px}
+.grp .gh .gp s{text-decoration:none}
+.cbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-p);background:none;color:var(--ink);font-size:15px;display:inline-flex;align-items:center;justify-content:center;transition:all .25s;margin-left:8px;flex-shrink:0}
+.cbtn:hover{background:var(--green-deep);border-color:var(--green-deep);color:var(--paper)}
+.cbtn[disabled]{opacity:.32;pointer-events:none}
+.grp.nocar .gp,.grp.nocar .cbtn{display:none}
+/* ============ editorial display type ============ */
+h1,h2,h3,.serif{letter-spacing:-.015em}
+h2{font-weight:500}
+.dir h3,.grp .gh h3,.sup h3{font-weight:500}
+
+/* ============ hero ============ */
+#home{position:relative;overflow:hidden;min-height:86vh;display:flex;align-items:center;
+  background:
+    linear-gradient(rgba(243,237,226,.045) 1px,transparent 1px) 0 0/72px 72px,
+    linear-gradient(90deg,rgba(243,237,226,.045) 1px,transparent 1px) 0 0/72px 72px,
+    radial-gradient(120% 90% at 76% 40%,#1D2A1B 0%,var(--stage) 46%,var(--stage-3) 100%)}
+#globeCv{position:absolute;left:-16%;bottom:-18%;width:70%;height:96%;opacity:.5;pointer-events:none}
+#partCv{position:absolute;inset:0;pointer-events:none}
+.hero-grid{display:flex;align-items:center;gap:44px;width:100%}
+#treeWrap{position:relative;flex:0 0 44%;max-width:660px;align-self:stretch;display:flex;align-items:center;justify-content:center;pointer-events:none;will-change:transform}
+.tree-frame{position:relative;width:84%;aspect-ratio:1.55/1;border:1px solid rgba(243,237,226,.16)}
+.tree-frame:before,.tree-frame:after{content:"";position:absolute;width:10px;height:10px;border:0 solid rgba(243,237,226,.42)}
+.tree-frame:before{top:-1px;left:-1px;border-top-width:1px;border-left-width:1px}
+.tree-frame:after{bottom:-1px;right:-1px;border-bottom-width:1px;border-right-width:1px}
+#treeWrap img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:118%;height:auto;max-width:none;display:block;filter:drop-shadow(0 40px 60px rgba(0,0,0,.45)) brightness(1.02);
+  -webkit-mask-image:linear-gradient(to bottom,#000 82%,rgba(0,0,0,.55) 93%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 82%,rgba(0,0,0,.55) 93%,transparent 100%)}
+.hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(96deg,rgba(15,22,16,.9) 0%,rgba(15,22,16,.62) 34%,rgba(15,22,16,0) 62%)}
+.hero-txt{position:relative;z-index:3;flex:1 1 auto;max-width:600px;padding:92px 0}
+.hero-txt h1{font-size:clamp(34px,4.8vw,58px);line-height:1.16;margin:14px 0 22px;color:var(--pink);text-wrap:balance}
+.hero-txt .lead{font-size:16.5px;line-height:1.9;color:rgba(243,237,226,.84);max-width:44ch;text-shadow:0 1px 12px rgba(15,22,16,.72)}
+.stats{display:flex;gap:46px;margin-top:46px}
+.stats .n{font-family:var(--serif);font-size:32px;color:#CFE3B4;font-weight:600}
+.stats .l{font-size:12.5px;color:var(--pink-mut);letter-spacing:.04em;margin-top:4px}
+.hint{display:inline-flex;align-items:center;gap:9px;margin-top:40px;font-size:12.5px;letter-spacing:.02em;color:var(--pink-mut);border:1px dashed rgba(243,237,226,.28);border-radius:999px;padding:8px 16px;background:none;transition:all .2s}
+.hint:hover{color:var(--pink);border-color:rgba(243,237,226,.5)}
+.scroll-hint{position:absolute;left:34px;bottom:26px;z-index:3;font-size:11px;letter-spacing:.1em;color:var(--pink-mut);display:flex;align-items:center;gap:10px}
+.scroll-hint i{display:block;width:1px;height:36px;background:linear-gradient(var(--green),transparent);animation:drip 2.4s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media(max-width:900px){.hero-grid{flex-direction:column-reverse;gap:6px}#treeWrap{flex:none;width:86%;max-width:none;min-height:230px}.hero-txt{padding:36px 0 72px;max-width:none}}
+
+/* ============ directions ============ */
+#about{background:
+    linear-gradient(rgba(243,237,226,.045) 1px,transparent 1px) 0 0/72px 72px,
+    linear-gradient(90deg,rgba(243,237,226,.045) 1px,transparent 1px) 0 0/72px 72px,
+    linear-gradient(var(--stage-3),var(--stage));padding:96px 0 120px}
+.dirs{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:20px;margin-top:52px}
+.dir{position:relative;background:rgba(243,237,226,.035);border:1px solid var(--line-d);border-radius:16px;padding:30px 28px 34px;transition:border-color .3s,transform .3s,background .3s}
+.dir:hover{border-color:rgba(127,160,90,.5);background:rgba(243,237,226,.06);transform:translateY(-4px)}
+.dir .ix{font-family:var(--serif);font-size:12.5px;letter-spacing:.12em;color:var(--green)}
+.dir h3{font-size:21px;margin:14px 0 12px;color:var(--pink);font-weight:600}
+.dir p{font-size:14px;line-height:1.9;color:var(--pink-mut)}
+.dir .kw{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.dir .kw i{font-style:normal;font-size:11px;letter-spacing:.02em;color:#CFE3B4;border:1px solid rgba(127,160,90,.4);border-radius:999px;padding:3px 10px}
+@media(max-width:900px){.dirs{grid-template-columns:1fr}}
+
+/* divider dark -> paper */
+.flare{display:block;width:100%;height:96px;background:var(--stage)}
+.flare svg{display:block;width:100%;height:100%}
+
+/* ============ members ============ */
+#members{padding:88px 0 96px}
+.sup{display:grid;grid-template-columns:250px 1fr;gap:44px;background:linear-gradient(135deg,var(--stage-2),var(--stage-3));border-radius:20px;padding:44px 48px;margin-top:52px;color:var(--pink);border:1px solid var(--line-d);cursor:pointer;transition:transform .3s,box-shadow .3s}
+.sup:hover{transform:translateY(-3px);box-shadow:0 24px 50px rgba(15,22,16,.35)}
+.sup .ava{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#8FB268,var(--green-deep) 72%);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:64px;color:#F6F2E7;box-shadow:inset 0 -14px 30px rgba(0,0,0,.28)}
+.sup h3{font-size:30px;font-weight:600}
+.sup .role{font-size:12px;letter-spacing:.08em;color:#CFE3B4;margin:8px 0 16px}
+.sup p{font-size:14.5px;line-height:1.9;color:var(--pink-mut);max-width:56ch}
+.sup .tags{display:flex;gap:8px;margin:18px 0 6px;flex-wrap:wrap}
+.sup .tags i{font-style:normal;font-size:12px;color:#CFE3B4;background:var(--green-soft);border-radius:999px;padding:4px 12px}
+.sup .hon{font-size:11.5px;color:var(--pink-mut);margin-top:14px;line-height:1.9}
+.sup .more{font-size:12px;letter-spacing:.04em;color:var(--green);margin-top:16px}
+.grp{margin-top:64px}
+.grp .gh{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.grp .gh h3{font-size:23px;font-weight:600}
+.grp .gh .c{font-family:var(--serif);font-size:12.5px;color:var(--brown-deep)}
+.grp .gh .rule{flex:1;height:1px;background:var(--line-p)}
+.car{position:relative}
+.track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 4px 22px;cursor:grab;scrollbar-width:none}
+.track::-webkit-scrollbar{display:none}
+.track.drag{cursor:grabbing;scroll-snap-type:none}
+.mcard{flex:0 0 232px;scroll-snap-align:start;background:var(--paper-2);border:1px solid var(--line-p);border-radius:14px;padding:24px 22px 22px;position:relative;transition:transform .3s,box-shadow .3s;cursor:pointer}
+.mcard:before{content:"";position:absolute;top:-16px;left:34px;width:1px;height:16px;background:rgba(138,90,59,.45)}
+.mcard:after{content:"";position:absolute;top:-19px;left:31.5px;width:6px;height:6px;border-radius:50%;background:var(--brown-deep)}
+.mcard:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.mcard .ava{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;color:#F6F2E7;margin-bottom:16px}
+.mcard .ava.g{background:radial-gradient(circle at 34% 30%,#8FB268,var(--green-deep) 74%)}
+.mcard .ava.b{background:radial-gradient(circle at 34% 30%,#C08552,var(--brown-deep) 74%)}
+.mcard b{font-family:var(--serif);font-size:17px;font-weight:600;display:block}
+.mcard .r{font-size:12.5px;color:var(--ink-mut);margin:4px 0 10px}
+.mcard .t{font-size:12.5px;color:var(--ink-mut);line-height:1.7}
+.mcard .yr{position:absolute;top:20px;right:18px;font-family:var(--serif);font-size:11px;color:var(--brown-deep);background:var(--brown-soft);border-radius:6px;padding:2px 8px}
+.bar{height:2px;background:var(--line-p);border-radius:2px;overflow:hidden;transition:opacity .3s}
+.bar i{display:block;height:100%;width:12%;background:var(--brown-deep);transition:width .2s}
+@media(max-width:900px){.sup{grid-template-columns:1fr;padding:32px 26px}.sup .ava{width:110px;height:110px;font-size:42px}}
+
+/* ============ pubs ============ */
+#pubs{padding:88px 0 96px;background:var(--paper-2);border-top:1px solid var(--line-p)}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:44px 0 18px}
+.tabs button{border:1px solid var(--line-p);background:none;border-radius:999px;padding:9px 20px;font-size:14px;color:var(--ink-mut);transition:all .25s}
+.tabs button:hover{color:var(--ink);border-color:rgba(34,29,21,.3)}
+.tabs button.on{background:var(--stage);color:var(--paper);border-color:var(--stage)}
+.ychips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:34px}
+.ychips button{border:0;background:none;font-family:var(--serif);font-size:12.5px;color:var(--ink-mut);padding:5px 10px;border-radius:8px;transition:all .2s}
+.ychips button:hover{color:var(--ink)}
+.ychips button.on{background:var(--green-soft);color:var(--green-deep)}
+.pub{display:flex;gap:26px;padding:24px 8px;border-top:1px solid var(--line-p);align-items:baseline;transition:background .25s}
+.pub:hover{background:rgba(127,160,90,.06)}
+.pub:last-child{border-bottom:1px solid var(--line-p)}
+.pub .no{font-family:var(--serif);font-size:12.5px;color:rgba(34,29,21,.3);flex:0 0 26px}
+.pub b{font-family:var(--serif);font-size:16.5px;font-weight:600;line-height:1.55;display:block;color:var(--ink)}
+.pub .meta{font-size:13px;color:var(--ink-mut);margin-top:5px}
+.pub .rchip{display:inline-block;font-size:11.5px;letter-spacing:.02em;color:var(--brown-deep);border:1px solid rgba(138,90,59,.35);border-radius:999px;padding:2px 10px;background:var(--brown-soft)}
+.pub .venue{margin-left:auto;font-size:11.5px;color:var(--green-deep);background:var(--green-soft);border-radius:6px;padding:3px 10px;white-space:nowrap;flex-shrink:0}
+@media(max-width:760px){.pub{flex-wrap:wrap}.pub .venue{margin-left:34px}}
+
+/* ============ news ============ */
+#news{padding:88px 0 110px}
+.tl{position:relative;margin-top:52px}
+.ncard{position:relative;background:var(--paper-2);border:1px solid var(--line-p);border-radius:14px;padding:26px 30px;box-shadow:var(--shadow);margin:0 0 26px 34px;transition:transform .3s,box-shadow .3s}
+.ncard:hover{transform:translateY(-3px)}
+.ncard .mh{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tag{font-size:11.5px;border-radius:999px;padding:4px 12px;letter-spacing:.04em}
+.ncard .dt{font-family:var(--serif);font-size:12.5px;color:var(--ink-mut)}
+.wxBadge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#0B7A4B;border:1px solid rgba(11,122,75,.35);border-radius:999px;padding:3px 10px;background:rgba(11,122,75,.07)}
+.wxBadge:before{content:"";width:6px;height:6px;border-radius:50%;background:#0B7A4B}
+.cnonly{font-size:11px;color:var(--ink-mut);border:1px dashed var(--line-p);border-radius:6px;padding:2px 8px}
+.ncard h3{font-size:19px;font-weight:600;margin:14px 0 10px;color:var(--ink)}
+.ncard .sum{font-size:14px;line-height:1.9;color:var(--ink-mut)}
+.ncard .body{display:none;font-size:14px;line-height:2;color:var(--ink-mut);margin-top:12px;border-top:1px dashed var(--line-p);padding-top:14px}
+.ncard.open .body{display:block}
+.ncard .more{font-size:11.5px;letter-spacing:.04em;color:var(--brown-deep);background:none;border:0;margin-top:14px;padding:0}
+.ncard.ext{cursor:pointer}
+.ncard.ext:hover{border-color:rgba(11,122,75,.4)}
+
+/* ============ footer ============ */
+footer{background:var(--stage-3);border-top:1px solid var(--line-d);padding:70px 0 40px;color:var(--pink-mut)}
+.ft{display:grid;grid-template-columns:1.4fr 1fr;gap:60px}
+.ft img{width:64px;height:64px;border-radius:50%;background:var(--paper);margin-bottom:20px}
+.ft b{font-family:var(--serif);font-size:19px;color:var(--pink);display:block;margin-bottom:12px}
+.ft p{font-size:13.5px;line-height:2}
+.ft .mail{font-family:var(--serif);font-size:13px;color:#CFE3B4}
+.ft h4{font-family:var(--serif);font-size:16px;color:var(--pink);margin-bottom:16px}
+.ft nav{display:flex;flex-direction:column;gap:10px}
+.ft nav a{color:var(--pink-mut);text-decoration:none;font-size:13.5px}
+.ft nav a:hover{color:var(--pink)}
+.ftbot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line-d);margin-top:52px;padding-top:26px;font-size:11.5px;letter-spacing:.02em}
+@media(max-width:900px){.ft{grid-template-columns:1fr}}
+
+/* ============ search overlay ============ */
+#sov{position:fixed;inset:0;z-index:90;background:rgba(11,17,11,.82);backdrop-filter:blur(10px);display:none;padding:11vh 20px 40px;overflow:auto}
+#sov.open{display:block}
+.spanel{max-width:660px;margin:0 auto;background:var(--stage-2);border:1px solid var(--line-d);border-radius:18px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.5)}
+.srow{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line-d)}
+.srow .ic{color:var(--green);font-size:17px}
+#sin{flex:1;background:none;border:0;outline:0;color:var(--pink);font-size:16px;font-family:var(--sans)}
+#sin::placeholder{color:rgba(243,237,226,.4)}
+.srow kbd{font-family:var(--mono);font-size:10px;color:var(--pink-mut);border:1px solid var(--line-d);border-radius:4px;padding:2px 6px}
+.schips{display:flex;gap:8px;flex-wrap:wrap;padding:14px 22px;border-bottom:1px solid var(--line-d)}
+.schips button{border:1px solid var(--line-d);background:none;color:var(--pink-mut);font-size:12px;border-radius:999px;padding:5px 13px;transition:all .2s}
+.schips button.on{background:var(--green-soft);color:#CFE3B4;border-color:rgba(127,160,90,.5)}
+#sres{max-height:46vh;overflow:auto;padding:8px}
+.sgrp{font-size:11px;letter-spacing:.1em;color:var(--pink-mut);padding:14px 14px 6px}
+.sitem{display:flex;gap:14px;align-items:baseline;padding:11px 14px;border-radius:10px;cursor:pointer}
+.sitem.act,.sitem:hover{background:rgba(243,237,226,.07)}
+.sitem .ty{font-size:10.5px;color:var(--green);flex:0 0 44px;letter-spacing:.04em}
+.sitem .ti{font-size:14px;color:var(--pink);line-height:1.6}
+.sitem .si{font-size:12px;color:var(--pink-mut);margin-top:2px}
+.sitem mark{background:none;color:#CFE3B4;font-weight:600}
+.sempty{padding:36px 20px;text-align:center;color:var(--pink-mut);font-size:13.5px}
+.sfoot{padding:12px 22px;border-top:1px solid var(--line-d);font-size:11px;color:var(--pink-mut);display:flex;gap:18px}
+
+/* ============ modal ============ */
+#mov{position:fixed;inset:0;z-index:95;background:rgba(11,17,11,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:24px}
+#mov.open{display:flex}
+.dlg{width:min(560px,100%);max-height:84vh;overflow:auto;background:var(--paper-2);color:var(--ink);border-radius:18px;padding:36px 38px;position:relative;box-shadow:0 40px 90px rgba(0,0,0,.45);animation:pop .35s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.dlg .x{position:absolute;top:16px;right:18px;border:0;background:none;font-size:20px;color:var(--ink-mut);line-height:1}
+.dlg .x:hover{color:var(--ink)}
+.dlg .top{display:flex;gap:20px;align-items:center}
+.dlg .ava{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:30px;color:#F6F2E7;flex-shrink:0}
+.dlg .ava.g{background:radial-gradient(circle at 34% 30%,#8FB268,var(--green-deep) 74%)}
+.dlg .ava.b{background:radial-gradient(circle at 34% 30%,#C08552,var(--brown-deep) 74%)}
+.dlg h3{font-size:24px;font-weight:600}
+.dlg .role{font-size:11.5px;letter-spacing:.06em;color:var(--brown-deep);margin-top:6px}
+.dlg .sec{margin-top:24px}
+.dlg .sec h5{font-size:11px;letter-spacing:.1em;color:var(--green-deep);margin-bottom:10px}
+.dlg .sec p,.dlg .sec li{font-size:13.5px;line-height:1.95;color:var(--ink-mut)}
+.dlg .sec ul{list-style:none}
+.dlg .sec li:before{content:"—  ";color:var(--brown-deep)}
+.dlg .chips{display:flex;gap:8px;flex-wrap:wrap}
+.dlg .chips i{font-style:normal;font-size:12px;color:var(--green-deep);background:var(--green-soft);border-radius:999px;padding:4px 12px}
+.dlg .mail{font-family:var(--serif);font-size:13px;color:var(--brown-deep)}
+.flash{animation:flash 1.4s ease}
+@keyframes flash{0%,60%{background:rgba(127,160,90,.22)}100%{background:transparent}}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="gate-in">
+    <img id="logoGate" alt="logo">
+    <p class="gq-zh">请选择阅读语言</p>
+    <p class="gq-en">Choose your language</p>
+    <div class="gpills">
+      <button data-glang="zh">中文</button>
+      <button data-glang="en">English</button>
+    </div>
+  </div>
+</div>
+<div id="page">
+<svg id="spineSvg" aria-hidden="true"></svg>
+
+<header>
+  <div class="hd">
+    <img id="logoSm" alt="logo">
+    <div class="nm"><b id="hdName"></b><span id="hdNameEn"></span></div>
+    <nav id="nav"></nav>
+    <button class="sbtn" id="sOpen" aria-label="search"><span>⌕</span><span id="sLabel">搜索</span><kbd>⌘K</kbd></button>
+    <div class="lang" role="group" aria-label="language">
+      <button data-lang="zh" class="on">中</button><button data-lang="en">EN</button>
+    </div>
+  </div>
+</header>
+<div id="hud" aria-hidden="true"><span class="hud-lines"><i></i><i></i><i></i></span><span class="hud-no" id="hudNo">00</span><span class="hud-sl">/</span><span class="hud-name" id="hudName"></span></div>
+
+<main>
+<section id="home">
+  <canvas id="globeCv"></canvas>
+  <canvas id="partCv"></canvas>
+  <div class="hero-scrim"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-txt">
+      <div class="kicker" id="heroKicker"></div>
+      <h1 id="heroTitle"></h1>
+      <p class="lead" id="heroLead"></p>
+      <div class="stats rv" id="stats"></div>
+      <button class="hint" id="hintBtn"><span>⌕</span><span id="hintTxt"></span></button>
+    </div>
+    <div id="treeWrap"><div class="tree-frame"><img id="treeImg" alt="banyan tree"></div></div>
+  </div>
+  <div class="scroll-hint"><i></i><span id="scrollTxt"></span></div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="kicker rv" id="aboutKicker"></div>
+    <h2 class="rv" style="--d:.06s" id="aboutTitle"></h2>
+    <p class="sub rv" style="--d:.12s" id="aboutSub"></p>
+    <div class="dirs" id="dirs"></div>
+  </div>
+</section>
+
+<div class="flare" aria-hidden="true"><svg viewBox="0 0 1440 96" preserveAspectRatio="none"><path d="M0,96 L0,64 C240,88 420,20 720,44 C1020,68 1200,10 1440,52 L1440,96 Z" fill="#F3EDE2"/></svg></div>
+
+<section id="members" class="on-paper">
+  <div class="wrap">
+    <div class="kicker rv" id="memKicker"></div>
+    <h2 class="rv" style="--d:.06s" id="memTitle"></h2>
+    <p class="sub rv" style="--d:.12s" id="memSub"></p>
+    <div class="sup rv" style="--d:.16s" id="supCard"></div>
+    <div id="groups"></div>
+  </div>
+</section>
+
+<section id="pubs" class="on-paper">
+  <div class="wrap">
+    <div class="kicker rv" id="pubKicker"></div>
+    <h2 class="rv" style="--d:.06s" id="pubTitle"></h2>
+    <div class="tabs rv" style="--d:.1s" id="tabs"></div>
+    <div class="ychips rv" style="--d:.14s" id="ychips"></div>
+    <div id="pubList"></div>
+  </div>
+</section>
+
+<section id="news" class="on-paper">
+  <div class="wrap">
+    <div class="kicker rv" id="newsKicker"></div>
+    <h2 class="rv" style="--d:.06s" id="newsTitle"></h2>
+    <div class="tl" id="newsList"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="ft">
+      <div>
+        <img id="logoFt" alt="logo">
+        <b id="ftName"></b>
+        <p id="ftAddr"></p>
+        <p class="mail" id="ftMail"></p>
+      </div>
+      <div>
+        <h4 id="ftNav"></h4>
+        <nav id="ftLinks"></nav>
+      </div>
+    </div>
+    <div class="ftbot"><span id="ftDisc"></span><span>© 2026 · Demo v2</span></div>
+  </div>
+</footer>
+</div>
+
+<div id="sov" role="dialog" aria-modal="true" aria-label="search">
+  <div class="spanel">
+    <div class="srow"><span class="ic">⌕</span><input id="sin" autocomplete="off"><kbd>ESC</kbd></div>
+    <div class="schips" id="schips"></div>
+    <div id="sres"></div>
+    <div class="sfoot"><span>↑↓ 选择</span><span>⏎ 打开</span><span>ESC 关闭</span></div>
+  </div>
+</div>
+
+<div id="mov" role="dialog" aria-modal="true">
+  <div class="dlg" id="dlg">
+    <button class="x" id="mClose" aria-label="close">×</button>
+    <div id="mBody"></div>
+  </div>
+</div>
+
+<script>
+const LOGO_B64 = "{{LOGO_B64}}";
+const TREE_B64 = "{{TREE_B64}}";
+
+/* ---------- i18n ---------- */
+const UI = {
+ zh:{nav:["首页","研究方向","成员","成果","新闻"],hd:"涉外刑事风险治理与合规中心",hdSub:"Center for Foreign-Related Criminal Risk Governance and Compliance",
+  heroKicker:"武汉大学涉外法治学院 · 研究中心",heroTitle:"涉外刑事风险治理<br>与合规中心",
+  heroLead:"聚焦网络犯罪与涉外刑事治理中的刑法问题，做回应真实世界的研究。",
+  stats:[["研究人员",20,"+"],["研究方向",3,""],["代表性成果",13,""]],
+  hint:"按 ⌘K 搜索成员、成果与新闻",scroll:"向下滚动",
+  aboutKicker:"研究方向",aboutTitle:"三个方向，一条主线：让刑法回应时代",
+  aboutSub:"从教义学根基到网络空间、再到涉外场域，三个方向共用一套问题意识：技术时代的刑法如何既不缺席、也不越位。",
+  memKicker:"课题组成员",memTitle:"独木成林",memSub:"像榕树一样：一位导师，众多研究者，气根落地又成新干。点开卡片可以看到每个人的具体信息。",
+  sup:"副教授 · 导师",more:"点击查看完整档案 ↓",phd:"博士生",ms:"硕士生",alumni:"毕业校友",
+  pubKicker:"研究成果",pubTitle:"写在纸上的，和做在地上的",
+  tabs:["论文","项目课题","学术论坛","出版专著"],all:"全部",
+  newsKicker:"新闻动态",newsTitle:"组里正在发生的事",
+  wx:"微信公众号",moreN:"展开全文",less:"收起",cnonly:"仅中文",
+  search:"搜索",sPh:"搜索成员、论文、课题、新闻…",
+  gM:"成员",gP:"论文",gJ:"项目",gF:"论坛",gB:"专著",gN:"新闻",
+  sEmpty:"没有匹配结果。试试「网络」「合规」或成员姓名。",
+  mBio:"简介",mDir:"研究方向",mTopic:"研究议题",mHon:"荣誉",mContact:"联系方式",mPub:"代表性成果",
+  ftAddr:"武汉大学法学院大楼 · 湖北武汉",ftMail:"crcgc@whu.edu.cn（占位）",ftNav:"站内导航",
+  ftDisc:"Demo 演示站：除导师成果外，人名与新闻均为占位示例数据。"},
+ en:{nav:["Home","Research","People","Achievements","News"],hd:"CRCGC · Wuhan University",hdSub:"Wuhan University · School of Foreign-Related Rule of Law",
+  heroKicker:"Wuhan University · School of Foreign-Related Rule of Law",heroTitle:"Center for Foreign-Related<br>Criminal Risk Governance<br>and Compliance",
+  heroLead:"Criminal-law research on cybercrime and foreign-related criminal governance — grounded in the real world.",
+  stats:[["Researchers",20,"+"],["Directions",3,""],["Selected outputs",13,""]],
+  hint:"Press ⌘K to search people, outputs & news",scroll:"Scroll",
+  aboutKicker:"Research",aboutTitle:"Three directions, one thread: criminal law answering its time",
+  aboutSub:"From doctrinal foundations to cyberspace to foreign-related arenas, one question runs through: how should criminal law respond to technology without overreaching?",
+  memKicker:"People",memTitle:"One tree, a whole grove",memSub:"Like a banyan: one supervisor, many researchers, aerial roots taking ground as new trunks. Click a card for details.",
+  sup:"Associate Professor · Supervisor",more:"Full profile ↓",phd:"PhD Students",ms:"Master Students",alumni:"Alumni",
+  pubKicker:"Achievements",pubTitle:"On paper, and on the ground",
+  tabs:["Papers","Projects","Forums","Books"],all:"All",
+  newsKicker:"News",newsTitle:"What is happening in the group",
+  wx:"WeChat Article",moreN:"Read more",less:"Collapse",cnonly:"Chinese only",
+  search:"Search",sPh:"Search people, papers, projects, news…",
+  gM:"People",gP:"Papers",gJ:"Projects",gF:"Forums",gB:"Books",gN:"News",
+  sEmpty:"No matches. Try “cyber”, “compliance”, or a name.",
+  mBio:"Bio",mDir:"Research directions",mTopic:"Topic",mHon:"Honors",mContact:"Contact",mPub:"Selected outputs",
+  ftAddr:"Law School Building, Wuhan University, Wuhan, China",ftMail:"crcgc@whu.edu.cn (placeholder)",ftNav:"Sitemap",
+  ftDisc:"Demo site: apart from the supervisor's real outputs, names and news are placeholder data."}
+};
+let LANG = "zh";
+const t = () => UI[LANG];
+const pick = o => typeof o === "string" ? o : (o[LANG] || o.zh || o.en);
+const missing = o => typeof o !== "string" && !o[LANG];
+
+/* ---------- data ---------- */
+const DIRS = [
+ {zh:{t:"刑法教义学",d:"以行为不法与犯罪参与理论为核心，为新型案件提供可检验的解释框架。",k:["行为不法","犯罪参与","预备犯"]},
+  en:{t:"Criminal Law Doctrine",d:"Core work on wrong-doing and participation theory, supplying testable interpretive frameworks for new case types.",k:["Wrong-doing","Participation","Preparatory offences"]}},
+ {zh:{t:"信息网络犯罪",d:"围绕帮助信息网络犯罪活动罪、拒不履行网络安全管理义务罪与网络暴力、深度伪造的刑事规制。",k:["帮信罪","平台义务","网络暴力","深度伪造"]},
+  en:{t:"Information-Network Crime",d:"On aiding information-network criminal activity, providers' security-management obligations, cyber violence and deepfakes.",k:["Aiding offence","Platform duties","Cyber violence","Deepfakes"]}},
+ {zh:{t:"涉外刑事法治",d:"跨境数据流动、电信诈骗产业链与涉外刑事管辖、合规的刑法回应。",k:["跨境数据","电诈产业链","刑事合规"]},
+  en:{t:"Foreign-Related Criminal Rule of Law",d:"Cross-border data flows, telecom-fraud chains, and the criminal-law response to jurisdiction and compliance.",k:["Cross-border data","Fraud chains","Compliance"]}}
+];
+const SUP = {zh:"敬力嘉",en:"Jing Lijia",ini:"敬",
+ role:"sup",
+ bio:{zh:"武汉大学法学院副教授。从事预防刑法、信息网络犯罪与数据合规研究。",en:"Associate Professor at Wuhan University Law School. Works on preventive criminal law, information-network crime and data compliance."},
+ tags:[0,1,2],
+ hon:[{zh:"第二届全国刑法学优秀学术著作奖（2014–2020）二等奖",en:"2nd National Criminal-Law Outstanding Academic Work Award (2014–2020), 2nd prize"},
+      {zh:"第五届全国优秀刑法论文奖（2017–2021）三等奖",en:"5th National Outstanding Criminal-Law Paper Award (2017–2021), 3rd prize"}],
+ contact:{zh:"武汉大学法学院 · 涉外法治学院（邮箱待补充）",en:"Law School / School of Foreign-Related Rule of Law, WHU (email TBA)"}};
+const MEM = {
+ phd:[{zh:"韩江雪",en:"Han Jiangxue",t:1,top:{zh:"平台责任的刑事边界",en:"Criminal limits of platform liability"},y:"2023"},
+      {zh:"赵一尘",en:"Zhao Yichen",t:2,top:{zh:"跨境数据流动的刑法回应",en:"Criminal-law response to cross-border data"},y:"2024"},
+      {zh:"许承洲",en:"Xu Chengzhou",t:0,top:{zh:"帮助行为正犯化的解释论",en:"Interpreting the principalisation of aiding conduct"},y:"2022"}],
+ ms:[{zh:"林小满",en:"Lin Xiaoman",t:1,top:{zh:"电诈链条中的共犯认定",en:"Complicity in telecom-fraud chains"},y:"2025"},
+     {zh:"周梓名",en:"Zi Mingzhou",t:2,top:{zh:"域外刑事管辖冲突",en:"Conflicts of extraterritorial jurisdiction"},y:"2025"},
+     {zh:"王佳音",en:"Wang Jiayin",t:0,top:{zh:"量刑说理的规范化",en:"Normalising sentencing reasoning"},y:"2024"},
+     {zh:"周之禾",en:"Zhou Zhihe",t:1,top:{zh:"AI 生成内容的刑事责任",en:"Criminal liability for AI-generated content"},y:"2024"},
+     {zh:"陈牧遥",en:"Chen Muyao",t:2,top:{zh:"国际刑事司法协助",en:"International criminal judicial assistance"},y:"2023"}],
+ alumni:[{zh:"苏哲",en:"Su Zhe",t:1,top:{zh:"现任职于某省检察院",en:"Now at a provincial procuratorate"},y:"2022 毕业"},
+         {zh:"何静姝",en:"He Jingshu",t:2,top:{zh:"现为高校法学院讲师",en:"Now a law-school lecturer"},y:"2021 毕业"}]
+};
+const PUBS = {
+ papers:[
+  {zh:"论帮助信息网络犯罪活动罪的规范属性",en:"The Normative Attribute of the Crime of Assisting Information-Network Criminal Activity",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《法学家》2025 年第 2 期",ven:"Jurists, 2025(2)",y:2025},
+  {zh:"网络服务提供者网暴治理义务的体系展开",en:"The Development of the System of Network Service Providers' Cyber-Violence Governance Obligations",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《北方法学》2023 年第 5 期",ven:"Northern Legal Science, 2023(5)",y:2023},
+  {zh:"个人信息保护合规的体系构建",en:"Systematic Construction of Personal-Information Protection Compliance",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《法学研究》2022 年第 4 期",ven:"Chinese Journal of Law, 2022(4)",y:2022},
+  {zh:"网络暴力法律规制的完善路径",en:"The Perfect Path of Legal Regulation of Cyber Violence",au:{zh:"敬力嘉、胡隽",en:"Jing Lijia & Hu Jun"},vzh:"《中国人民公安大学学报（社科版）》2021 年第 5 期",ven:"J. People's Public Security Univ. (Soc. Sci.), 2021(5)",y:2021},
+  {zh:"信息网络安全管理义务的刑法教义学展开",en:"The Doctrinal Development of Information-Network Security Management Obligations",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《东方法学》2017 年第 5 期",ven:"Oriental Law, 2017(5)",y:2017},
+  {zh:"论拒不履行网络安全管理义务罪——以网络中介服务者的刑事责任为中心展开",en:"On the Crime of Refusing to Fulfil Network-Security Management Obligations",au:{zh:"敬力嘉",en:"Jing Lijia"},vzh:"《政治与法律》2017 年第 1 期",ven:"Political Science & Law, 2017(1)",y:2017}],
+ projects:[
+  {zh:"武汉大学中央高校基本科研业务费专项资金自主科研项目（2020AI015）",en:"WHU Central-University Basic Research Fund, Self-Directed Project (2020AI015)",au:{zh:"主持 · 来源已核实",en:"PI · source verified"},vzh:"武汉大学",ven:"Wuhan University",y:2020},
+  {zh:"信息网络犯罪刑事归责的预防转向与法治限度",en:"The Preventive Turn and Legal Limits of Criminal Attribution in Information-Network Crime",au:{zh:"主持 · 来源待补充",en:"PI · source TBA"},vzh:"在研课题",ven:"Ongoing project",y:0},
+  {zh:"“深度伪造”问题的刑事规制与限度研究",en:"Criminal Regulation and Limits of Deepfakes",au:{zh:"主持 · 来源待补充",en:"PI · source TBA"},vzh:"在研课题",ven:"Ongoing project",y:0},
+  {zh:"网络暴力防治研究",en:"Research on Prevention and Control of Cyber Violence",au:{zh:"主持 · 来源待补充",en:"PI · source TBA"},vzh:"在研课题",ven:"Ongoing project",y:0}],
+ forums:[
+  {zh:"南京大学法学院学术系列讲座：实体程序交互视域下电诈犯罪产业链的归责路径",en:"Academic lecture at Nanjing University Law School: attribution paths in telecom-fraud chains",au:{zh:"主讲人",en:"Speaker"},vzh:"南京大学法学院 · 2025-10-23",ven:"NJU Law School · 2025-10-23",y:2025}],
+ books:[
+  {zh:"犯罪参与行为的处罚边界：网络时代的新展开",en:"The Boundaries of Punishment for Criminal Participation: New Developments in the Network Era",au:"独著",vzh:"社会科学文献出版社 · 2023",ven:"SSAP · 2023",y:2023},
+  {zh:"信息网络犯罪规制的预防转向与限度",en:"The Preventive Turn and Its Limits in the Regulation of Information-Network Crimes",au:"独著",vzh:"社会科学文献出版社 · 2019",ven:"SSAP · 2019",y:2019},
+  {zh:"网络刑法原理",en:"Principles of Cyber Criminal Law",au:"参编",vzh:"北京大学出版社 · 2022 · 主编江溯",ven:"Peking Univ. Press · 2022 · ed. Jiang Su",y:2022}]
+};
+const NEWS = [
+ {tag:0,d:"2026-06-18",zh:{t:"中心举办第三届网络犯罪治理青年学者论坛",s:"来自十二所高校的青年学者围绕平台责任、数据犯罪与 AI 刑事风险展开为期两天的讨论。",b:"论坛设三个单元：平台义务的教义学构造、跨境数据取证的程序困境、深度伪造的刑法规制边界。会议论文将以集刊形式出版。"},
+  en:{t:"3rd Youth Scholars Forum on Cybercrime Governance held",s:"Young scholars from twelve universities discussed platform liability, data crime and AI criminal risk over two days.",b:"Three sessions: doctrinal structure of platform duties, procedural dilemmas of cross-border evidence collection, and limits of deepfake regulation. Papers to be published in an edited volume."}},
+ {tag:3,d:"2026-05-09",zh:{t:"中心与省人民检察院签署研究合作协议",s:"双方将围绕电信网络诈骗案件办理中的证据与定性问题开展联合研究。",b:"合作包括双向挂职、疑难案件会诊与年度白皮书发布机制。"},
+  en:{t:"Center signs research cooperation agreement with Provincial Procuratorate",s:"Joint research on evidence and characterisation in telecom-fraud cases.",b:"Cooperation includes secondments, case consultations and an annual white paper."}},
+ {tag:2,d:"2026-04-21",zh:{t:"课题组赴基层检察院调研跨境电信诈骗案件",s:"三天走访四个办案单位，整理访谈记录逾十万字。",b:"调研聚焦跨境链条中的主观明知认定与涉案财物处置，形成三万字调研报告。"},
+  en:{t:"Field investigation on cross-border telecom fraud at grassroots procuratorates",s:"Four offices visited in three days; over 100,000 characters of interview notes.",b:"The fieldwork focused on knowledge attribution and the disposal of case-involved property, producing a 30,000-character report."}},
+ {tag:0,d:"2026-03-30",wx:"https://mp.weixin.qq.com/",zh:{t:"一文读懂网络犯罪新规：中心教师接受专访",s:"中心教师就最新司法解释接受媒体专访，全文见微信公众号。",b:""},
+  en:{t:"Understanding the new cybercrime rules: faculty interview",s:"Center faculty interviewed on the latest judicial interpretation; full text on WeChat.",b:""}},
+ {tag:5,d:"2025-12-10",zh:{t:"课题组成果获省哲学社会科学优秀成果奖二等奖",s:"获奖成果为系列论文《网络犯罪治理的刑法体系化》。",b:"该系列由五篇论文构成，历时三年完成。"},
+  en:{t:"Group work wins 2nd prize of Provincial Philosophy & Social Science Award",s:"The awarded work is the paper series “Systematising Criminal Law for Cybercrime Governance”.",b:"The series comprises five papers completed over three years."}},
+ {tag:4,d:"2025-11-02",zh:{t:"秋季组会读书纪要：《刑法各论的构造》",s:"本次组会由博士生领读，讨论持续三个半小时。",b:""},en:null}
+];
+const TAGS = [{zh:"学术活动",en:"Academic",c:"#3E5B26",bg:"rgba(127,160,90,.16)"},
+ {zh:"学术论坛",en:"Forum",c:"#3E5B26",bg:"rgba(127,160,90,.16)"},
+ {zh:"调研考察",en:"Fieldwork",c:"#8A5A3B",bg:"rgba(169,113,75,.14)"},
+ {zh:"合作交流",en:"Cooperation",c:"#5B4A8A",bg:"rgba(91,74,138,.12)"},
+ {zh:"组内动态",en:"Group Life",c:"#6E6558",bg:"rgba(110,101,88,.12)"},
+ {zh:"荣誉获奖",en:"Honors",c:"#8A5A3B",bg:"rgba(169,113,75,.16)"}];
+
+/* ---------- state ---------- */
+let pubTab = 0, pubYear = "all", sFilter = "all", sAct = 0, sResults = [];
+
+/* ---------- render ---------- */
+function renderStatic(){
+  document.documentElement.lang = LANG==="zh"?"zh-CN":"en";
+  document.getElementById("hdName").textContent = t().hd;
+  document.getElementById("hdNameEn").textContent = t().hdSub;
+  document.getElementById("nav").innerHTML = t().nav.map((n,i)=>{
+    const ids=["home","about","members","pubs","news"];
+    return `<a href="#${ids[i]}" data-sec="${ids[i]}">${n}</a>`;}).join("");
+  document.getElementById("sLabel").textContent = t().search;
+  document.getElementById("heroKicker").textContent = t().heroKicker;
+  document.getElementById("heroTitle").innerHTML = t().heroTitle;
+  document.getElementById("heroLead").textContent = t().heroLead;
+  document.getElementById("hintTxt").textContent = t().hint.replace(/按 |Press /,"");
+  document.getElementById("scrollTxt").textContent = t().scroll;
+  document.getElementById("stats").innerHTML = t().stats.map(s=>
+    `<div><div class="n"><span data-cnt="${s[1]}">0</span>${s[2]}</div><div class="l">${s[0]}</div></div>`).join("");
+  const stEl=document.getElementById("stats"); if(stEl.classList.contains("in")) countUp(stEl);
+  document.getElementById("aboutKicker").textContent = t().aboutKicker;
+  document.getElementById("aboutTitle").textContent = t().aboutTitle;
+  document.getElementById("aboutSub").textContent = t().aboutSub;
+  document.getElementById("memKicker").textContent = t().memKicker;
+  document.getElementById("memTitle").textContent = t().memTitle;
+  document.getElementById("memSub").textContent = t().memSub;
+  document.getElementById("pubKicker").textContent = t().pubKicker;
+  document.getElementById("pubTitle").textContent = t().pubTitle;
+  document.getElementById("newsKicker").textContent = t().newsKicker;
+  document.getElementById("newsTitle").textContent = t().newsTitle;
+  document.getElementById("ftName").textContent = UI.zh.hd;
+  document.getElementById("ftAddr").textContent = t().ftAddr;
+  document.getElementById("ftMail").textContent = t().ftMail;
+  document.getElementById("ftNav").textContent = t().ftNav;
+  document.getElementById("ftDisc").textContent = t().ftDisc;
+  document.getElementById("ftLinks").innerHTML = t().nav.map((n,i)=>{
+    const ids=["home","about","members","pubs","news"];
+    return `<a href="#${ids[i]}">${n}</a>`;}).join("");
+  document.getElementById("sin").placeholder = t().sPh;
+}
+function renderDirs(){
+  document.getElementById("dirs").innerHTML = DIRS.map((d,i)=>`
+    <div class="dir rv" style="--d:${i*0.08}s"><div class="ix">0${i+1}</div>
+      <h3>${pick(d).t}</h3><p>${pick(d).d}</p>
+      <div class="kw">${pick(d).k.map(k=>`<i>${k}</i>`).join("")}</div></div>`).join("");
+}
+function personModalData(p,isSup){
+  return {ini:p.ini||(p.zh||p).slice(0,1),name:pick(p),
+    role:isSup?t().sup:(p.y&&String(p.y).includes("毕业")?t().alumni:(p.grp==="ms"?t().ms:t().phd)),
+    bio:isSup?pick(p.bio):null,dirs:isSup?p.tags.map(i=>pick(DIRS[i]).t):(p.t!=null?[pick(DIRS[p.t]).t]:[]),
+    topic:(p.top?pick(p.top):null),hon:isSup?p.hon.map(h=>pick(h)):null,
+    contact:isSup?pick(p.contact):t().ftMail,
+    pubs:isSup?PUBS.papers.slice(0,3).map(x=>pick(x)):null};
+}
+function openModal(d,cls){
+  document.getElementById("mBody").innerHTML = `
+    <div class="top"><div class="ava ${cls||"g"}">${d.ini}</div>
+      <div><h3>${d.name}</h3><div class="role">${d.role}</div></div></div>
+    ${d.bio?`<div class="sec"><h5>${t().mBio}</h5><p>${d.bio}</p></div>`:""}
+    ${d.dirs&&d.dirs.length?`<div class="sec"><h5>${t().mDir}</h5><div class="chips">${d.dirs.map(x=>`<i>${x}</i>`).join("")}</div></div>`:""}
+    ${d.topic?`<div class="sec"><h5>${t().mTopic}</h5><p>${d.topic}</p></div>`:""}
+    ${d.hon?`<div class="sec"><h5>${t().mHon}</h5><ul>${d.hon.map(x=>`<li>${x}</li>`).join("")}</ul></div>`:""}
+    ${d.pubs?`<div class="sec"><h5>${t().mPub}</h5><ul>${d.pubs.map(x=>`<li>${x}</li>`).join("")}</ul></div>`:""}
+    <div class="sec"><h5>${t().mContact}</h5><p class="mail">${d.contact}</p></div>`;
+  document.getElementById("mov").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeModal(){document.getElementById("mov").classList.remove("open");document.body.style.overflow="";}
+function renderMembers(){
+  const s=SUP;
+  document.getElementById("supCard").innerHTML = `
+    <div class="ava">${LANG==="zh"?"敬":"J"}</div>
+    <div><h3>${pick(s)}</h3><div class="role">${t().sup}</div>
+      <p>${pick(s.bio)}</p>
+      <div class="tags">${s.tags.map(i=>`<i>${pick(DIRS[i]).t}</i>`).join("")}</div>
+      <div class="hon">${s.hon.map(h=>pick(h)).join("<br>")}</div>
+      <div class="more">${t().more}</div></div>`;
+  const groups=[["phd",MEM.phd,t().phd],["ms",MEM.ms,t().ms],["alumni",MEM.alumni,t().alumni]];
+  document.getElementById("groups").innerHTML = groups.map(([k,arr,label],gi)=>`
+    <div class="grp"><div class="gh rv"><h3>${label}</h3><span class="c">${arr.length}</span><span class="rule"></span>
+      <span class="gp"><b>01</b><i>/</i><s>01</s></span>
+      <button class="cbtn" data-cnav="${k}:-1" aria-label="prev">‹</button>
+      <button class="cbtn" data-cnav="${k}:1" aria-label="next">›</button></div>
+      <div class="car rv" style="--d:.08s"><div class="track" data-g="${k}">
+        ${arr.map((m,i)=>`<div class="mcard" data-m="${k}:${i}">
+          <span class="yr">${m.y}</span>
+          <div class="ava ${(i+gi)%2?"b":"g"}">${pick(m).slice(0,1)}</div>
+          <b>${pick(m)}</b><div class="r">${pick(DIRS[m.t]).t}</div><div class="t">${pick(m.top)}</div>
+        </div>`).join("")}
+      </div><div class="bar"><i></i></div></div></div>`).join("");
+  document.querySelectorAll(".track").forEach(bindDrag);
+}
+function bindDrag(tr){
+  let down=false,sx=0,sl=0;
+  tr.addEventListener("pointerdown",e=>{down=true;sx=e.clientX;sl=tr.scrollLeft;tr.style.scrollSnapType="";tr.classList.add("drag");tr.setPointerCapture(e.pointerId);});
+  tr.addEventListener("pointermove",e=>{if(down)tr.scrollLeft=sl-(e.clientX-sx);});
+  ["pointerup","pointercancel","pointerleave"].forEach(ev=>tr.addEventListener(ev,()=>{down=false;tr.classList.remove("drag");}));
+  const bar=tr.closest(".car").querySelector(".bar i");
+  const barWrap=bar.parentElement;
+  const grp=tr.closest(".grp");
+  const gk=tr.dataset.g;
+  const gpCur=grp.querySelector(".gp b");
+  const gpTot=grp.querySelector(".gp s");
+  const prevBtn=grp.querySelector('.cbtn[data-cnav="'+gk+':-1"]');
+  const nextBtn=grp.querySelector('.cbtn[data-cnav="'+gk+':1"]');
+  const pad=n=>String(n).padStart(2,"0");
+  const upd=()=>{const max=tr.scrollWidth-tr.clientWidth;
+    if(max<1){barWrap.style.opacity="0";}else{barWrap.style.opacity="1";bar.style.width=(12+88*(tr.scrollLeft/max))+"%";}};
+  const geom=()=>{
+    const max=tr.scrollWidth-tr.clientWidth;
+    const pages=max<1?1:Math.max(2,Math.ceil(tr.scrollWidth/tr.clientWidth));
+    const cur=pages<2?1:Math.max(1,Math.min(pages,1+Math.round(tr.scrollLeft/max*(pages-1))));
+    return {max,pages,cur};
+  };
+  const paint=()=>{
+    const {max,pages,cur}=geom();
+    if(max<1){grp.classList.add("nocar");}else{grp.classList.remove("nocar");}
+    if(gpCur)gpCur.textContent=pad(cur);
+    if(gpTot)gpTot.textContent=pad(pages);
+    if(prevBtn)prevBtn.toggleAttribute("disabled",cur<=1);
+    if(nextBtn)nextBtn.toggleAttribute("disabled",cur>=pages);
+    upd();
+  };
+  const goPage=p=>{
+    const {max,pages}=geom();
+    if(pages<2||max<1)return;
+    const q=Math.max(1,Math.min(pages,p));
+    tr.style.scrollSnapType="none";
+    tr.scrollTo({left:Math.round((q-1)/(pages-1)*max),behavior:"auto"});
+    paint();
+  };
+  if(prevBtn)prevBtn.addEventListener("click",()=>goPage(geom().cur-1));
+  if(nextBtn)nextBtn.addEventListener("click",()=>goPage(geom().cur+1));
+  tr.addEventListener("scroll",paint,{passive:true});addEventListener("resize",paint);paint();
+}
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = t().tabs.map((x,i)=>
+    `<button class="${i===pubTab?"on":""}" data-tab="${i}">${x}</button>`).join("");
+  const keys=["papers","projects","forums","books"];
+  const years=[...new Set(PUBS[keys[pubTab]].map(p=>p.y).filter(Boolean))].sort((a,b)=>b-a);
+  document.getElementById("ychips").innerHTML = years.map(y=>
+    `<button class="${String(y)===String(pubYear)?"on":""}" data-year="${y}">${y}</button>`).join("")
+    + `<button class="${pubYear==="all"?"on":""}" data-year="all">${t().all}</button>`;
+}
+function renderPubs(){
+  const keys=["papers","projects","forums","books"];
+  let items=PUBS[keys[pubTab]].filter(p=>pubYear==="all"||p.y===+pubYear);
+  document.getElementById("pubList").innerHTML = items.map((p,i)=>`
+    <div class="pub rv" style="--d:${i*0.05}s"><span class="no">${String(i+1).padStart(2,"0")}</span>
+      <div><b>${pick(p)}</b><div class="meta">${pubTab===3?`<span class="rchip">${p.au}</span>`:pick(p.au)}</div></div>
+      <span class="venue">${LANG==="zh"?p.vzh:p.ven}</span></div>`).join("")
+    || `<p class="sempty" style="color:var(--ink-mut)">${LANG==="zh"?"该年份暂无记录":"No records for this year."}</p>`;
+}
+function renderNews(){
+  document.getElementById("newsList").innerHTML = NEWS.map((n,i)=>{
+    const c=pick(n),m=missing(n),tg=TAGS[n.tag];
+    const cn=m?`<span class="cnonly">${t().cnonly}</span>`:"";
+    const wx=n.wx?`<span class="wxBadge">${t().wx}</span>`:"";
+    return `<div class="ncard rv ${n.wx?"ext":""}" style="--d:${i*0.05}s" data-n="${i}">
+      <div class="mh"><span class="tag" style="color:${tg.c};background:${tg.bg}">${LANG==="zh"?tg.zh:tg.en}</span>
+        <span class="dt">${n.d}</span>${wx}${cn}</div>
+      <h3>${c.t}</h3><p class="sum">${c.s}</p>
+      ${c.b?`<div class="body">${c.b}</div><button class="more">${t().moreN} ↓</button>`:""}</div>`;}).join("");
+}
+function renderAll(){renderStatic();renderDirs();renderMembers();renderTabs();renderPubs();renderNews();observe();buildSpine();}
+
+/* ---------- search ---------- */
+function buildIndex(){
+  const ix=[];
+  ix.push({ty:"gM",title:pick(SUP),sub:pick(SUP.bio),act:()=>openModal(personModalData(SUP,true),"g")});
+  Object.entries(MEM).forEach(([k,arr])=>arr.forEach((m,i)=>ix.push({ty:"gM",title:pick(m),sub:pick(DIRS[m.t]).t+" · "+pick(m.top),act:()=>{const d=personModalData(Object.assign({grp:k},m),false);openModal(d,k==="ms"?"b":"g");}})));
+  PUBS.papers.forEach(p=>ix.push({ty:"gP",title:pick(p),sub:LANG==="zh"?p.vzh:p.ven,act:()=>goto("pubs")}));
+  PUBS.projects.forEach(p=>ix.push({ty:"gJ",title:pick(p),sub:LANG==="zh"?p.vzh:p.ven,act:()=>goto("pubs")}));
+  PUBS.forums.forEach(p=>ix.push({ty:"gF",title:pick(p),sub:LANG==="zh"?p.vzh:p.ven,act:()=>goto("pubs")}));
+  PUBS.books.forEach(p=>ix.push({ty:"gB",title:pick(p),sub:LANG==="zh"?p.vzh:p.ven,act:()=>goto("pubs")}));
+  NEWS.forEach((n,i)=>{const c=pick(n);if(c)ix.push({ty:"gN",title:c.t,sub:n.d,act:()=>{goto("news");setTimeout(()=>{const el=document.querySelector(`[data-n="${i}"]`);if(el){el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1500);}},350);}});});
+  return ix;
+}
+const TYPEMAP={gM:["gM"],gP:["gP"],gJ:["gJ"],gF:["gF"],gB:["gB"],gN:["gN"]};
+function runSearch(){
+  const q=document.getElementById("sin").value.trim().toLowerCase();
+  const ix=buildIndex();
+  sResults=ix.filter(it=>(sFilter==="all"||it.ty===sFilter)&&(!q||(it.title+it.sub).toLowerCase().includes(q))).slice(0,24);
+  sAct=0;drawSearch(q);
+}
+function hl(s,q){if(!q)return s;const i=s.toLowerCase().indexOf(q);if(i<0)return s;return s.slice(0,i)+"<mark>"+s.slice(i,i+q.length)+"</mark>"+s.slice(i+q.length);}
+function drawSearch(q){
+  const box=document.getElementById("sres");
+  if(!sResults.length){box.innerHTML=`<div class="sempty">${t().sEmpty}</div>`;return;}
+  let html="",last="";
+  sResults.forEach((it,i)=>{
+    if(it.ty!==last){html+=`<div class="sgrp">${t()[it.ty]}</div>`;last=it.ty;}
+    html+=`<div class="sitem ${i===sAct?"act":""}" data-i="${i}"><span class="ty">${t()[it.ty]}</span><span><span class="ti">${hl(it.title,q)}</span><div class="si">${hl(it.sub,q)}</div></span></div>`;});
+  box.innerHTML=html;
+}
+function openSearch(){document.getElementById("sov").classList.add("open");document.body.style.overflow="hidden";
+  document.getElementById("schips").innerHTML=[["all",t().all],["gM",t().gM],["gP",t().gP],["gJ",t().gJ],["gF",t().gF],["gB",t().gB],["gN",t().gN]]
+    .map(([k,l])=>`<button class="${sFilter===k?"on":""}" data-f="${k}">${l}</button>`).join("");
+  setTimeout(()=>{document.getElementById("sin").focus();runSearch();},30);}
+function closeSearch(){document.getElementById("sov").classList.remove("open");document.body.style.overflow="";}
+function goto(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"});}
+
+/* ---------- spine ---------- */
+function buildSpine(){
+  const svg=document.getElementById("spineSvg");
+  const page=document.getElementById("page");
+  const H=page.scrollHeight,W=page.clientWidth;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.style.height=H+"px";
+  const gut=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--gut"))||72;
+  const tree=document.getElementById("treeWrap").getBoundingClientRect();
+  const pr=page.getBoundingClientRect();
+  const tx=tree.left-pr.left+tree.width*0.46, ty=tree.top-pr.top+tree.height*0.80;
+  const homeB=document.getElementById("about").getBoundingClientRect().top-pr.top;
+  let d=`M ${tx} ${ty} C ${tx-60} ${ty+90}, ${gut+150} ${homeB-40}, ${gut} ${homeB+70}`;
+  const footTop=document.querySelector("footer").getBoundingClientRect().top-pr.top;
+  d+=` L ${gut} ${footTop-30}`;
+  let branches="",nodes="",dots="";
+  [["about"],["members"],["pubs"],["news"]].forEach(([id])=>{
+    const sec=document.getElementById(id);const r=sec.getBoundingClientRect();
+    const y=r.top-pr.top+118;
+    branches+=`<path class="branch" data-y="${y}" d="M ${gut} ${y} H ${Math.min(W-40,gut+(W>900? 30:20))}"/>`;
+    nodes+=`<circle class="node" data-y="${y}" cx="${gut}" cy="${y}" r="4.5"/>`;});
+  document.querySelectorAll(".ncard").forEach(c=>{
+    const r=c.getBoundingClientRect();const y=r.top-pr.top+30;
+    dots+=`<circle class="ndot" data-y="${y}" cx="${gut}" cy="${y}" r="3.4"/>`;});
+  svg.innerHTML=`<path class="root" id="rootP" d="M ${tx} ${ty} C ${tx-60} ${ty+90}, ${gut+150} ${homeB-40}, ${gut} ${homeB+70}"/>
+    <path class="main" id="mainP" d="M ${gut} ${homeB+70} L ${gut} ${footTop-30}"/>${branches}${nodes}${dots}`;
+  const mp=document.getElementById("mainP"),rp=document.getElementById("rootP");
+  [mp,rp].forEach(p=>{const L=p.getTotalLength();p.style.strokeDasharray=L;p.dataset.len=L;});
+  spineMeta={mp,rp, startY:homeB+70, endY:footTop-30};
+  onScroll();
+}
+let spineMeta=null;
+let hudIdx=-1;
+function onScroll(){
+  const sy=window.scrollY,vh=innerHeight;
+  if(spineMeta){
+    const {mp,rp,startY,endY}=spineMeta;
+    const p=Math.max(0,Math.min(1,(sy+vh*0.72-startY)/(endY-startY)));
+    mp.style.strokeDashoffset=mp.dataset.len*(1-p);
+    const L=+rp.dataset.len;rp.style.strokeDashoffset=sy>40?0:L;
+    rp.style.transition="stroke-dashoffset 1.2s ease";
+    document.querySelectorAll("#spineSvg [data-y]").forEach(el=>{
+      el.classList.toggle("on",+el.dataset.y < sy+vh*0.86);});
+  }
+  const SECS=["home","about","members","pubs","news"];
+  let ci=0;
+  document.querySelectorAll("nav a[data-sec]").forEach(a=>{
+    const sec=document.getElementById(a.dataset.sec);if(!sec)return;
+    const r=sec.getBoundingClientRect();
+    const act=r.top<=vh*0.4&&r.bottom>vh*0.4;
+    a.classList.toggle("on",act);
+    if(act)ci=SECS.indexOf(a.dataset.sec);});
+  if(ci<0)ci=0;
+  if(ci!==hudIdx){
+    hudIdx=ci;
+    const hud=document.getElementById("hud");
+    if(hud){
+      document.getElementById("hudNo").textContent=String(ci).padStart(2,"0");
+      document.getElementById("hudName").textContent=t().nav[ci]||"";
+      const sec=document.getElementById(SECS[ci]);
+      hud.classList.toggle("on-paper",!!(sec&&sec.classList.contains("on-paper")));
+    }
+  }
+}
+
+/* ---------- motion: particles + globe + canopy breathing ---------- */
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let parts=[],mouse={x:-9999,y:-9999},px=0,py=0,syT=0,sy=0;
+function initCanvas(){
+  const pc=document.getElementById("partCv"),gc=document.getElementById("globeCv");
+  const hero=document.getElementById("home");
+  function size(){const r=hero.getBoundingClientRect();
+    pc.width=r.width*devicePixelRatio;pc.height=r.height*devicePixelRatio;
+    pc.style.width=r.width+"px";pc.style.height=r.height+"px";
+    gc.width=gc.clientWidth*devicePixelRatio;gc.height=gc.clientHeight*devicePixelRatio;
+    const n=Math.min(70,Math.floor(r.width/18));parts=[];
+    for(let i=0;i<n;i++)parts.push({x:Math.random()*r.width,y:Math.random()*r.height,
+      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.6+.8});
+  }
+  size();addEventListener("resize",()=>{size();buildSpine();});
+  hero.addEventListener("pointermove",e=>{const r=hero.getBoundingClientRect();
+    mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;
+    px=((e.clientX-r.left)/r.width-.5)*2;py=((e.clientY-r.top)/r.height-.5)*2;});
+  hero.addEventListener("pointerleave",()=>{mouse.x=-9999;mouse.y=-9999;});
+  const cx=pc.getContext("2d"),gx=gc.getContext("2d");
+  let rot=0,tt=0;
+  function drawParts(){
+    const w=pc.width/devicePixelRatio,h=pc.height/devicePixelRatio;
+    cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    cx.clearRect(0,0,w,h);
+    for(const p of parts){
+      const dx=p.x-mouse.x,dy=p.y-mouse.y,dist=Math.hypot(dx,dy);
+      if(dist<150&&dist>0.01){const f=(150-dist)/150*0.9;p.x+=dx/dist*f;p.y+=dy/dist*f;}
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;
+    }
+    cx.lineWidth=1;
+    for(let i=0;i<parts.length;i++)for(let j=i+1;j<parts.length;j++){
+      const a=parts[i],b=parts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<118){cx.strokeStyle=`rgba(127,160,90,${(1-d/118)*.22})`;
+        cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();}
+    }
+    for(const p of parts){cx.fillStyle="rgba(200,160,120,.55)";
+      cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill();}
+  }
+  function drawGlobe(){
+    const w=gc.width/devicePixelRatio,h=gc.height/devicePixelRatio;
+    gx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    gx.clearRect(0,0,w,h);
+    const R=Math.min(w,h)*0.46,cx0=w/2,cy0=h/2;
+    rot+=0.0016;
+    gx.fillStyle="rgba(127,160,90,.4)";
+    for(let lat=-75;lat<=75;lat+=15)for(let lon=0;lon<360;lon+=10){
+      const la=lat*Math.PI/180,lo=lon*Math.PI/180+rot;
+      const x=Math.cos(la)*Math.cos(lo),y=Math.sin(la),z=Math.cos(la)*Math.sin(lo);
+      if(z<-0.15)continue;
+      const tilt=0.42;
+      const y2=y*Math.cos(tilt)-z*Math.sin(tilt),z2=y*Math.sin(tilt)+z*Math.cos(tilt);
+      if(z2<0)continue;
+      gx.globalAlpha=.18+.5*z2;
+      gx.beginPath();gx.arc(cx0+x*R,cy0-y2*R,1.1,0,7);gx.fill();
+    }
+    gx.globalAlpha=1;
+  }
+  function loop(ts){
+    tt=ts;syT=window.scrollY;sy+=(syT-sy)*.09;
+    drawParts();drawGlobe();
+    const br=Math.sin(ts/1500)*0.006;
+    document.getElementById("treeWrap").style.transform=
+      `translate3d(0,${sy*0.16}px,0) rotate(${px*0.5+py*0.25}deg) scale(${1+br+Math.abs(px)*0.008})`;
+    document.querySelector(".hero-txt").style.opacity=Math.max(0,1-sy/(innerHeight*0.9));
+    requestAnimationFrame(loop);
+  }
+  if(RM){drawParts();drawGlobe();}else requestAnimationFrame(loop);
+  addEventListener("scroll",()=>{if(RM)onScroll();else onScroll();},{passive:true});
+}
+
+/* ---------- reveal & count ---------- */
+let io;
+function countUp(root){
+  root.querySelectorAll("[data-cnt]").forEach(cnt=>{
+    const target=+cnt.dataset.cnt;let c=0;const step=Math.max(1,Math.round(target/28));
+    const iv=setInterval(()=>{c+=step;if(c>=target){c=target;clearInterval(iv);}cnt.textContent=c;},34);});
+}
+function observe(){
+  if(io)io.disconnect();
+  io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");
+    countUp(e.target);
+    io.unobserve(e.target);}}),{threshold:.14});
+  document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+  const tab=e.target.closest("[data-tab]");if(tab){pubTab=+tab.dataset.tab;pubYear="all";renderTabs();renderPubs();observe();return;}
+  const yc=e.target.closest("[data-year]");if(yc){pubYear=yc.dataset.year;renderTabs();renderPubs();observe();return;}
+  const lg=e.target.closest(".lang button");if(lg){setLang(lg.dataset.lang);return;}
+  const mc=e.target.closest(".mcard");if(mc){const [k,i]=mc.dataset.m.split(":");const m=MEM[k][+i];
+    openModal(personModalData(Object.assign({grp:k},m),false),k==="ms"?"b":"g");return;}
+  if(e.target.closest("#supCard")){openModal(personModalData(SUP,true),"g");return;}
+  const more=e.target.closest(".ncard .more");if(more){const card=more.closest(".ncard");
+    card.classList.toggle("open");more.textContent=card.classList.contains("open")?t().less+" ↑":t().moreN+" ↓";return;}
+  const ext=e.target.closest(".ncard.ext");if(ext&&!more){window.open(NEWS[+ext.dataset.n].wx,"_blank");return;}
+  const f=e.target.closest("#schips button");if(f){sFilter=f.dataset.f;openSearch();runSearch();return;}
+  const si=e.target.closest(".sitem");if(si){const it=sResults[+si.dataset.i];closeSearch();it.act();return;}
+});
+document.getElementById("sOpen").addEventListener("click",openSearch);
+document.getElementById("hintBtn").addEventListener("click",openSearch);
+document.getElementById("mClose").addEventListener("click",closeModal);
+document.getElementById("mov").addEventListener("click",e=>{if(e.target.id==="mov")closeModal();});
+document.getElementById("sov").addEventListener("click",e=>{if(e.target.id==="sov")closeSearch();});
+document.getElementById("sin").addEventListener("input",runSearch);
+addEventListener("keydown",e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openSearch();return;}
+  if(e.key==="Escape"){closeSearch();closeModal();return;}
+  if(document.getElementById("sov").classList.contains("open")){
+    if(e.key==="ArrowDown"){e.preventDefault();sAct=Math.min(sResults.length-1,sAct+1);drawSearch(document.getElementById("sin").value.trim().toLowerCase());}
+    if(e.key==="ArrowUp"){e.preventDefault();sAct=Math.max(0,sAct-1);drawSearch(document.getElementById("sin").value.trim().toLowerCase());}
+    if(e.key==="Enter"&&sResults[sAct]){closeSearch();sResults[sAct].act();}
+  }});
+function setLang(l){LANG=l;
+  document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.lang===l));
+  hudIdx=-1;
+  renderAll();}
+
+/* ---------- boot ---------- */
+document.getElementById("logoSm").src="data:image/webp;base64,"+LOGO_B64;
+document.getElementById("logoFt").src="data:image/webp;base64,"+LOGO_B64;
+document.getElementById("treeImg").src="data:image/webp;base64,"+TREE_B64;
+document.getElementById("treeImg").onload=()=>{buildSpine();};
+renderAll();
+(function(){
+  const gate=document.getElementById("gate");
+  document.getElementById("logoGate").src="data:image/webp;base64,"+LOGO_B64;
+  let saved=null;try{saved=localStorage.getItem("ctr_lang");}catch(e){}
+  const close=l=>{gate.classList.add("off");try{localStorage.setItem("ctr_lang",l);}catch(e){}};
+  gate.addEventListener("click",e=>{const b=e.target.closest("[data-glang]");if(b){setLang(b.dataset.glang);close(b.dataset.glang);}});
+  addEventListener("keydown",e=>{if(e.key==="Escape"&&!gate.classList.contains("off")){setLang("zh");close("zh");}});
+  if(saved==="en"||saved==="zh"){setLang(saved);gate.classList.add("off");}
+})();
+initCanvas();
+addEventListener("load",()=>{buildSpine();observe();});
+</script>
+</body>
+</html>

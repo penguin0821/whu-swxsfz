@@ -1,0 +1,19 @@
+# 构建依赖的大文件：思源宋体完整 OTF（约 23MB，见 fonts/README.md 下载方式）
+fonts/*.otf
+fonts/SourceHanSerif*.otf
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# 本地调试/中间产物（若在本目录外构建时产生）
+_check.js
+_*.log
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
