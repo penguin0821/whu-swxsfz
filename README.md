@@ -39,7 +39,7 @@ open index.html            # macOS
 | `reinject6.py` | 构建脚本：字体自同步 + 资源注入 + 字形守卫，输出 `index.html`。 |
 | `assets/` | base64 素材（logo、浮岛、枝干、地球陆地掩膜、导师照片）与源图。 |
 | `fonts/` | 思源宋体子集 woff2、字符集清单、字体 base64。OTF 源文件不入库，见 `fonts/README.md`。 |
-| `docs/` | 开发使用手册、CMS 与演进路线、成果清单（含来源核实）。 |
+| `docs/` | 开发使用手册、异地开发指南、CMS 与演进路线、成果清单（含来源核实）。 |
 | `deploy/` | GitHub Pages 部署脚本与说明。 |
 | `tools/` | 一次性的素材生成 / 审计脚本，保留备查。 |
 | `legacy/` | 冻结的 v1–v5 历史模板与构建脚本，仅作演进记录，勿用于生产。 |
